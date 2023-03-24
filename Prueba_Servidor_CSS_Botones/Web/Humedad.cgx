@@ -1,0 +1,7 @@
+t <form>
+t <text>
+t <id>valor_humedad</id>
+c h <value>%5f %</value>
+t </text>
+t </form>
+.
