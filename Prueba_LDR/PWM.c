@@ -1,6 +1,11 @@
 #include "PWM.h"
-
+#include "adc.h"
 static GPIO_InitTypeDef GPIO_InitStruct;
+
+	uint32_t luzz=0;
+	static ADC_HandleTypeDef adc;
+	float porcentaje;
+	
 
 
 /*------------------------------------------------------------------------------
@@ -12,7 +17,7 @@ Tambiés habría que cambiar Init_PWM_Pin y Config_PWM_Pulse
 static TIM_HandleTypeDef htim4;
 static TIM_OC_InitTypeDef Channel_Tim4_Config;
 
-osThreadId_t tid_ThPWM;
+	osThreadId_t tid_ThPWM;
 
 void ThPWM (void *argument);                   // thread function
 
@@ -43,7 +48,7 @@ void Init_PWM_Pin(void)
    __HAL_RCC_GPIOD_CLK_ENABLE();
   
   GPIO_InitStruct.Pin = GPIO_PIN_13;
-	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;		// Pagina 79, en la primea fila de la columna 4 indica que es AF2
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
@@ -57,7 +62,7 @@ void Init_PWM_Pin(void)
 	HAL_TIM_PWM_Init(&htim4);
 	
   Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;
-	Channel_Tim4_Config.Pulse = 8000;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
+	Channel_Tim4_Config.Pulse = 10000;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
 	Channel_Tim4_Config.OCPolarity =TIM_OCPOLARITY_HIGH;
 	Channel_Tim4_Config.OCFastMode = TIM_OCFAST_DISABLE;
   
@@ -67,7 +72,7 @@ void Init_PWM_Pin(void)
 /*---------------------------------------------------------------------------------------------------------
 				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
  --------------------------------------------------------------------------------------------------------*/
-void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
+void Config_PWM_Pulse(uint32_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
 {
 	Init_PWM_Pin();				// Ineficiente porque se está volviendo a configurar el pin, dudo que en el examen pidan meter el PWM y manejo de leds en un mismo apartado
 	
@@ -81,7 +86,7 @@ void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, t
 		HAL_TIM_PWM_Init(&htim4);
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM2;			// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
-		Channel_Tim4_Config.Pulse = pulse*80;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
+		Channel_Tim4_Config.Pulse = pulse;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
 		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_2);			// Es importante para configurar el canal
 		
 		HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
@@ -98,15 +103,27 @@ int Init_ThPWM (void) {
   if (tid_ThPWM == NULL) {
     return(-1);
   }
-	Init_PWM_Pin();
+	
   return(0);
 }
 
 void ThPWM (void *argument){
 
 	while(1){
+	  //medida de luminosidad cada 1 segundo
+		HAL_Delay(1000);
+		HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
+		ADC_Init_Single_Conversion(&adc,ADC1);
+		luzz=ADC_getVoltage(&adc,13);
+		//hallamos porcentaje de luz
+		porcentaje=luzz*100/4096;
+		//actualizamos ancho del PWM (LEDS)
+		if(luzz<10){
+		Config_PWM_Pulse(0,true);
+		}else{
+		Config_PWM_Pulse(luzz,true);
+		}
 	
-	
-	
+	 osThreadYield();                            // suspend thread
 	}
 }
