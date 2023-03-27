@@ -25,7 +25,7 @@
 
 
 #include "PIR.h"
-
+#include "Test.h"
 
 
 
@@ -112,17 +112,16 @@ int main(void)
   /* Add your application code here
      */
 	Init_PIR_Pin();
-	LED_Init();
 	
 	
 
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
-
-  /* Create thread functions that start executing, 
-  Example: osThreadNew(app_main, NULL, NULL); */
-
+	
+	Init_Thread();
+	Init_MsgPIR();
+	
   /* Start thread execution */
   osKernelStart();
 #endif
