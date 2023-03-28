@@ -403,6 +403,16 @@
               <FileType>5</FileType>
               <FilePath>.\Temp_Hum.h</FilePath>
             </File>
+            <File>
+              <FileName>Test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Test.h</FilePath>
+            </File>
+            <File>
+              <FileName>TestTempHum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\TestTempHum.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
