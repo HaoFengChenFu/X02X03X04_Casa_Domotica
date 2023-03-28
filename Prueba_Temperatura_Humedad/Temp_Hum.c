@@ -14,7 +14,7 @@ static ARM_DRIVER_I2C* I2Cdrv_1 = &Driver_I2C1;
 
 static uint8_t periodic_adq_cmd[2];
 static uint8_t sensor_output[6];
-
+static uint16_t aux_temp, aux_hum;
 Mensaje_Temp_Hum Msg_Temp_Hum;
 
 void I2C_SignalEvent_TEMP_HUM (uint32_t event);
@@ -30,10 +30,6 @@ void ThTemp_Hum (void *argument);
 		printf("Transmision I2C finalizada\n");
     osThreadFlagsSet(tid_ThTemp_Hum, 1);
   }
-	if (event & ARM_I2C_EVENT_SLAVE_TRANSMIT) {
-		osThreadFlagsSet(tid_ThTemp_Hum, 2);
-	}
-	
 }
  
 /*------------------------------------------------------------------
@@ -70,27 +66,47 @@ int Init_ThTemp_Hum (void) {
 						Thread en ejecución
  -----------------------------------------------------------------*/
 void ThTemp_Hum (void *argument) {
-	periodic_adq_cmd[0] = CMD_PREIODIC_ADQ_MSB;
-	periodic_adq_cmd[1] = CMD_PREIODIC_ADQ_LSB;
-	
 	Init_MsgTemp_Hum();
 	
-	printf("Inicializacializando comunicacion I2C\n");
-	I2Cdrv_1->MasterTransmit(ADDR_TEMP_HUM, periodic_adq_cmd, 2, false);		// Direccion del sensor / Dato a transmitir (Para configurar el sensor) / Numero de bytes transmitidos / Falso porque no queremos que la operacion este pendiente
-	osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
-  while (1) {
-		osDelay(500);
-		I2Cdrv_1->MasterReceive(ADDR_TEMP_HUM, sensor_output, 6, false);			// Debe recibir 6 bytes
-		osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
-		
-		
-		Msg_Temp_Hum.temperatura = 175*((sensor_output[0]<<8)&(sensor_output[1]))/(65535)-45;
-		Msg_Temp_Hum.humedad = 175*((sensor_output[3]<<8)&(sensor_output[4]))/(65535);
-		
-		
+	//Set_SingleShot_Mode();
+	Set_PeriodicAdq_Mode();
+	Config_Communication();
+	
+  while (1) {		
+		//ReadSingleShot();
+		ReadSensorData();
 		osMessageQueuePut(mid_MsgTemp_Hum, &Msg_Temp_Hum, 0U, 0U);
-		
+		osDelay(500);
 		osThreadYield();
   }
 }
 
+void Config_Communication(void)
+{
+	printf("Inicializacializando comunicacion I2C\n");
+	I2Cdrv_1->MasterTransmit(ADDR_TEMP_HUM, periodic_adq_cmd, 2, false);		// Direccion del sensor / Dato a transmitir (Para configurar el sensor) / Numero de bytes transmitidos / Falso porque no queremos que la operacion este pendiente
+	osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
+}
+
+void Set_SingleShot_Mode(void)
+{
+	periodic_adq_cmd[0] = CMD_SINGLE_ADQ_MSB;
+	periodic_adq_cmd[1] = CMD_SINGLE_ADQ_LSB;
+}
+
+void Set_PeriodicAdq_Mode(void)
+{
+	periodic_adq_cmd[0] = CMD_PERIODIC_ADQ_MSB;
+	periodic_adq_cmd[1] = CMD_PERIODIC_ADQ_LSB;
+}
+
+void ReadSensorData(void)
+{
+	I2Cdrv_1->MasterReceive(ADDR_TEMP_HUM, sensor_output, 6, false);			// Debe recibir 6 bytes
+	osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
+	
+	aux_temp = (sensor_output[0]*256)|(sensor_output[1]);
+	aux_hum = (sensor_output[3]<<8)|(sensor_output[4]);
+	Msg_Temp_Hum.temperatura = 175*(((float)aux_temp/65535))-45;
+	Msg_Temp_Hum.humedad = 175*((float)(aux_hum)/(65535));
+}
