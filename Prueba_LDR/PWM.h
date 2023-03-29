@@ -7,7 +7,7 @@
 	#include "stm32f4xx_hal.h"
 	#include "cmsis_os2.h"                          // CMSIS RTOS header file
 	#include <stdbool.h>
-//	#include "rl_net.h"			// Este deja usar el bool
+	#include "adc.h"
 
 	#define PERIODO 8000-1
 	#define PRESCALER 42-1

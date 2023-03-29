@@ -2,9 +2,9 @@
 #include "adc.h"
 static GPIO_InitTypeDef GPIO_InitStruct;
 
-	float luzz=0;
-	static ADC_HandleTypeDef adc;
-	uint8_t porcentaje;
+static float luzz=0;
+static ADC_HandleTypeDef adc;
+uint8_t porcentaje;
 
 /*------------------------------------------------------------------------------
 										Variables de los Timers
@@ -15,26 +15,14 @@ Tambiés habría que cambiar Init_PWM_Pin y Config_PWM_Pulse
 static TIM_HandleTypeDef htim4;
 static TIM_OC_InitTypeDef Channel_Tim4_Config;
 
-	osThreadId_t tid_ThPWM;
+osThreadId_t tid_ThPWM;
 
 void ThPWM (void *argument);                   // thread function
 
 
 /*------------------------------------------------------------------------------
 							Pines correspondientes para el PWM de cada Led
-		LED 0 (Verde) de la tarjeta STM32: 	Timer 3 / Canal 3  (TIM3_CH3)
-
-		LED 1 (Azul) de la tarjeta STM32: 	Timer 4 / Canal 2	(TIM4_CH2)
-
-		LED 2 (Rojo) de la tarjeta STM32: 	Timer 1 / Canal 2 ( Que es CH2N ???)
-
-
-		Los leds del RGB funcionan al revés que los leds de la tarjeta
-		LED RGB (Verde) de la mbed: 	No tiene timer			Conectado a PD11			/ Si se cambia al pin PD14 será Timer 4 / CH4
-
-		LED RGB (Azul) de la mbed: Timer 4 / Canal 1			Conectado a PD12
-										
-		LED RGB (Rojo) de la mbed: Timer 4 / Canal 2			Conectado a PD13
+										Timer 4 / Canal 4  Pin :PD15
 										
  -------------------------------------------------------------------------------*/
 
@@ -92,7 +80,6 @@ void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, tru
 		Channel_Tim4_Config.Pulse = 80*80;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
 		}
 		
-		
 		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_4);				// Es importante para configurar el canal
 		
 		HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
@@ -122,11 +109,7 @@ void ThPWM (void *argument){
 		luzz=ADC_getVoltage(&adc,13);
 		
 		//actualizamos ancho del PWM (LEDS)
-		if(luzz< 0.2f){//cuando hay bastante luminosidad se apagan los LEDS de la casa
-		Config_PWM_Pulse(0,true);
-		}else{
 		Config_PWM_Pulse(luzz,true);
-		}
 	
 	 osThreadYield();                            // suspend thread
 	}
