@@ -72,7 +72,7 @@ void Init_PWM_Pin(void)
  --------------------------------------------------------------------------------------------------------*/
 void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
 {	
-	porcentaje = (uint8_t) ((pulse*100)/ 3.3f);
+	porcentaje =  ((pulse*100)/ 3.3f);
 	
 	if (PWM_Habilitado){
 		HAL_TIM_PWM_DeInit(&htim4);
@@ -84,15 +84,18 @@ void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, tru
 		HAL_TIM_PWM_Init(&htim4);
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;			// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
-		if(porcentaje < 20){
+		
+		if (porcentaje < 30){
+		Channel_Tim4_Config.Pulse = 70*80;		// Ciclo de trabajo del 70 % para que no ilumine demasiado por la noche
+		}
+		else if (porcentaje > 80){
 		Channel_Tim4_Config.Pulse = 0;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
 		}
-		else if(porcentaje > 60){
-		Channel_Tim4_Config.Pulse = 80*60;
-		}
 		else{
-		Channel_Tim4_Config.Pulse = 80*porcentaje;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
+		Channel_Tim4_Config.Pulse = 80*(100 - porcentaje);		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
 		}
+		
+		
 		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_4);				// Es importante para configurar el canal
 		
 		HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
