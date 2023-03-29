@@ -23,6 +23,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "Temp_Hum.h"
+#include "Test.h"
 
 #ifdef _RTE_
 #include "RTE_Components.h"             // Component selection
@@ -113,7 +114,7 @@ int main(void)
 
 	
 	Init_ThTemp_Hum();
-	
+	Init_Thread();
 	
   /* Start thread execution */
   osKernelStart();

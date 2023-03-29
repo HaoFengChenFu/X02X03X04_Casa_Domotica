@@ -3,7 +3,8 @@
 
 	#include "stm32f4xx_hal.h"
 	#include "stdio.h"
+	#include "cmsis_os2.h"
 	void Init_PIR_Pin(void);
-	void LED_Init(void);				// Esta funcion es solo para rpobar que el PIN funciona
-
+	int Init_MsgPIR (void);
+	
 #endif

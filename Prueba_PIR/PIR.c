@@ -1,7 +1,7 @@
 #include "PIR.h"
 
-
-
+osMessageQueueId_t mid_MsgPIR;
+static uint8_t movimiento;
 /*------------------------------------------------------------------------
              Inicialización de los pines para el PIR
  ------------------------------------------------------------------------*/	
@@ -20,17 +20,19 @@ void Init_PIR_Pin(void){
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
-void LED_Init(void){
-	GPIO_InitTypeDef GPIO_InitStruct;
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_PULLUP; /*Elegimos modo Pull Up*/
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH; /*Elegimos la velocidad*/
-		
-	GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_7|GPIO_PIN_14;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-		
+/*------------------------------------------------------------------
+						Iniciacion de la cola de mensajes
+ -----------------------------------------------------------------*/
+int Init_MsgPIR (void)
+{
+	osStatus_t status;
+	mid_MsgPIR = osMessageQueueNew(4, sizeof(movimiento), NULL);
+	if (mid_MsgPIR != NULL){
+			if( status != osOK){
+				return -1;
+			}
+	}
+	return 0;
 }
 
 void EXTI15_10_IRQHandler(void){
@@ -40,13 +42,14 @@ void EXTI15_10_IRQHandler(void){
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 	if(GPIO_PIN_11 == GPIO_PIN){
 		if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_RESET){
-			printf("Presencia desaparecida");
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-			
+			printf("Presencia desaparecida\n");
+			movimiento = 0;
+			osMessageQueuePut(mid_MsgPIR, &movimiento, 0, 0);
 		}
 		else{
-			printf("Presencia detectada");
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
+			printf("Presencia detectada\n");
+			movimiento = 1;
+			osMessageQueuePut(mid_MsgPIR, &movimiento, 0, 0);
 		}
 		
 		
