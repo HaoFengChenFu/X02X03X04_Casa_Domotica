@@ -2,9 +2,9 @@
 #include "adc.h"
 static GPIO_InitTypeDef GPIO_InitStruct;
 
-	 uint32_t luzz=0;
+	float luzz=0;
 	static ADC_HandleTypeDef adc;
-
+	uint8_t porcentaje;
 
 /*------------------------------------------------------------------------------
 										Variables de los Timers
@@ -60,7 +60,7 @@ void Init_PWM_Pin(void)
 	HAL_TIM_PWM_Init(&htim4);
 	
   Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;
-	Channel_Tim4_Config.Pulse = 10000;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
+	Channel_Tim4_Config.Pulse = 0;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
 	Channel_Tim4_Config.OCPolarity =TIM_OCPOLARITY_HIGH;
 	Channel_Tim4_Config.OCFastMode = TIM_OCFAST_DISABLE;
   
@@ -70,9 +70,9 @@ void Init_PWM_Pin(void)
 /*---------------------------------------------------------------------------------------------------------
 				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
  --------------------------------------------------------------------------------------------------------*/
-void Config_PWM_Pulse(uint32_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
-{
-	Init_PWM_Pin();				// Ineficiente porque se está volviendo a configurar el pin, dudo que en el examen pidan meter el PWM y manejo de leds en un mismo apartado
+void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
+{	
+	porcentaje = (uint8_t) ((pulse*100)/ 3.3f);
 	
 	if (PWM_Habilitado){
 		HAL_TIM_PWM_DeInit(&htim4);
@@ -84,8 +84,16 @@ void Config_PWM_Pulse(uint32_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, 
 		HAL_TIM_PWM_Init(&htim4);
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;			// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
-		Channel_Tim4_Config.Pulse = pulse;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
-		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_4);			// Es importante para configurar el canal
+		if(porcentaje < 20){
+		Channel_Tim4_Config.Pulse = 0;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
+		}
+		else if(porcentaje > 60){
+		Channel_Tim4_Config.Pulse = 80*60;
+		}
+		else{
+		Channel_Tim4_Config.Pulse = 80*porcentaje;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
+		}
+		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_4);				// Es importante para configurar el canal
 		
 		HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);
 	}
@@ -101,7 +109,7 @@ int Init_ThPWM (void) {
   if (tid_ThPWM == NULL) {
     return(-1);
   }
-	
+	Init_PWM_Pin();
   return(0);
 }
 
@@ -114,7 +122,7 @@ void ThPWM (void *argument){
 		luzz=ADC_getVoltage(&adc,13);
 		
 		//actualizamos ancho del PWM (LEDS)
-		if(luzz<400){//cuando hay bastante luminosidad se apagan los LEDS de la casa
+		if(luzz< 0.2f){//cuando hay bastante luminosidad se apagan los LEDS de la casa
 		Config_PWM_Pulse(0,true);
 		}else{
 		Config_PWM_Pulse(luzz,true);

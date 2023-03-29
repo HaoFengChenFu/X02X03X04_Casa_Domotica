@@ -67,13 +67,13 @@ int ADC_Init_Single_Conversion(ADC_HandleTypeDef *hadc, ADC_TypeDef  *ADC_Instan
 	* @param channel number
 	* @retval voltage in float (resolution 12 bits and VRFE 3.3
   */
-uint32_t ADC_getVoltage(ADC_HandleTypeDef *hadc, uint32_t Channel)
+float ADC_getVoltage(ADC_HandleTypeDef *hadc, uint32_t Channel)
 	{
 		ADC_ChannelConfTypeDef sConfig = {0};
 		HAL_StatusTypeDef status;
 
 		uint32_t raw = 0;
-		//float voltage = 0;
+		float voltage = 0;
 		 /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
   sConfig.Channel = Channel;
@@ -92,9 +92,9 @@ uint32_t ADC_getVoltage(ADC_HandleTypeDef *hadc, uint32_t Channel)
 		
 		raw = HAL_ADC_GetValue(hadc);
 		
-		//voltage = raw*VREF/RESOLUTION_12B; 
+		voltage = (float)raw*((float)VREF/RESOLUTION_12B); 
 		
-		return raw;
+		return voltage;
 
 }
 	

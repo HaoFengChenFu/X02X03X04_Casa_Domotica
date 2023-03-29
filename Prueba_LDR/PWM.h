@@ -15,7 +15,7 @@
 
 	
 	void Init_PWM_Pin(void);
-	void Config_PWM_Pulse(uint32_t pulse, bool PWM_Habilitado);
+	void Config_PWM_Pulse(float pulse, bool PWM_Habilitado);
 	int Init_ThPWM (void);
 	
 	
