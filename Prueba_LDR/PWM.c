@@ -2,9 +2,7 @@
 #include "adc.h"
 static GPIO_InitTypeDef GPIO_InitStruct;
 
-static float luzz=0;
 static ADC_HandleTypeDef adc;
-uint8_t porcentaje;
 
 /*------------------------------------------------------------------------------
 										Variables de los Timers
@@ -59,7 +57,7 @@ void Init_PWM_Pin(void)
 				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
  --------------------------------------------------------------------------------------------------------*/
 void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
-{	
+{	uint8_t porcentaje;
 	porcentaje =  ((pulse*100)/ 3.3f);
 	
 	if (PWM_Habilitado){
@@ -101,10 +99,10 @@ int Init_ThPWM (void) {
 }
 
 void ThPWM (void *argument){
-
+float luzz=0;
 	while(1){
 	  //medida de luminosidad cada 1 segundo
-		HAL_Delay(2000);
+		osDelay(2000);
 		ADC_Init_Single_Conversion(&adc,ADC1);
 		luzz=ADC_getVoltage(&adc,13);
 		
