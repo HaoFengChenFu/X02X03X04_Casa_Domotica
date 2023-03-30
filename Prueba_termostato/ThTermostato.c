@@ -31,14 +31,12 @@ int Init_ThThermostato (void) {
 void ThTermostato (void *argument) {
   Init_Ventilador_MsgTemp_Hum ();
   while (1) {	
-		if(osMessageQueueGetCount(mid_Msg_Ventilador_Temphum) != 0){
-		  osMessageQueueGet(mid_Msg_Ventilador_Temphum, &info_temp_Hum, 0, 0);
-		    if(info_temp_Hum.temperatura > UMBRAL && !ventilador_encendido){//comprobamos umbral
-		      encender_ventilador();
-		    }else if(info_temp_Hum.temperatura <= UMBRAL && ventilador_encendido){
-					apagar_ventilador();
-				}
-	  }
+		osMessageQueueGet(mid_Msg_Ventilador_Temphum, &info_temp_Hum, 0, osWaitForever);
+		  if(info_temp_Hum.temperatura > UMBRAL && !ventilador_encendido){//comprobamos umbral
+		    encender_ventilador();
+		  }else if(info_temp_Hum.temperatura <= UMBRAL && ventilador_encendido){
+			  apagar_ventilador();
+		  }
   osThreadYield();                            // suspend thread
   }
 }
