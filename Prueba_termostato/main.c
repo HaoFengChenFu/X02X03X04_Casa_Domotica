@@ -115,8 +115,8 @@ int main(void)
   osKernelInitialize ();
 
 	
-	//Init_ThTemp_Hum();
-	//Init_Thread();
+	Init_ThTemp_Hum();
+	Init_Thread();
 	Init_ThThermostato();
 	
 	

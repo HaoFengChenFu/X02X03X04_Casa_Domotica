@@ -7,6 +7,7 @@
 osThreadId_t tid_Thread;                        // thread id
 Mensaje_Temp_Hum datos;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
+extern osMessageQueueId_t mid_Msg_Ventilador_Temphum;
 
 void Thread (void *argument);                   // thread function
 
@@ -24,9 +25,8 @@ void Thread (void *argument) {
   while (1) {
 		if(osMessageQueueGetCount(mid_MsgTemp_Hum) != 0){
 			osMessageQueueGet(mid_MsgTemp_Hum, &datos, 0, 0);
-	
 			printf("La temperatura actual es %.2f ºC y la humedad relativa es %.2f %%\n", datos.temperatura, datos.humedad);
-			
+	    osMessageQueuePut(mid_Msg_Ventilador_Temphum, &datos, 0U, 0U);
 		}
   }
 }

@@ -10,6 +10,13 @@
 osThreadId_t tid_ThTermostato;                        // thread id
  
 extern void ThTermostato (void *argument);                   // thread function
+
+osMessageQueueId_t mid_Msg_Ventilador_Temphum;//id cola que se comunicara con thread principal
+Mensaje_Temp_Hum_ventilador info_temp_Hum;
+
+static bool ventilador_encendido=false;//guardamos el estado del ventilador
+
+
  
 int Init_ThThermostato (void) {
  
@@ -22,16 +29,24 @@ int Init_ThThermostato (void) {
 }
  
 void ThTermostato (void *argument) {
- 
-  while (1) {
-		//prueba del ventilador 
-    osDelay(4000);
-		encender_ventilador();
-    osThreadYield();                            // suspend thread
+  Init_Ventilador_MsgTemp_Hum ();
+  while (1) {	
+		if(osMessageQueueGetCount(mid_Msg_Ventilador_Temphum) != 0){
+		  osMessageQueueGet(mid_Msg_Ventilador_Temphum, &info_temp_Hum, 0, 0);
+		    if(info_temp_Hum.temperatura > UMBRAL && !ventilador_encendido){//comprobamos umbral
+		      encender_ventilador();
+		    }else if(info_temp_Hum.temperatura <= UMBRAL && ventilador_encendido){
+					apagar_ventilador();
+				}
+	  }
+  osThreadYield();                            // suspend thread
   }
 }
 
 
+/*------------------------------------------------------------------
+				Inicializacion pin del ventilador
+ -----------------------------------------------------------------*/
 void init_ventilador(void){//PC6
 	
 	static GPIO_InitTypeDef GPIO_InitStruct;
@@ -47,13 +62,37 @@ void init_ventilador(void){//PC6
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
 	
 }
-
+/*------------------------------------------------------------------
+				Encender ventilador
+ -----------------------------------------------------------------*/
 void encender_ventilador(void){
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
+	ventilador_encendido=true;
 }
-
+/*------------------------------------------------------------------
+				Apagar ventilador
+ -----------------------------------------------------------------*/
 void apagar_ventilador(void){
 	
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
+	ventilador_encendido=false;
 	
 }
+
+/*------------------------------------------------------------------
+				inicializacion cola de mensajes para la comunicacion con
+        el thread principal donde se metera la informacion de la 
+         temperatura y humedad
+ -----------------------------------------------------------------*/
+int Init_Ventilador_MsgTemp_Hum (void)
+{
+	osStatus_t status;
+	mid_Msg_Ventilador_Temphum = osMessageQueueNew(4, sizeof(info_temp_Hum), NULL);
+	if (mid_Msg_Ventilador_Temphum != NULL){
+			if( status != osOK){
+				return -1;
+			}
+	}
+	return 0;
+}
+
