@@ -103,7 +103,7 @@ void ThTemp_Hum (void *argument) {
 	Init_timer_TempHum();
 	
 	Config_Communication(1);
-	osDelay(1);			// Esperar 1 ms para que almenos se actualice los registros
+	osDelay(5);			// Esperar 5 ms para que almenos se actualice los registros y asi no leer valores nulos
 	
   while (1) {		
 		ReadSensorData();

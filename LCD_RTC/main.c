@@ -44,6 +44,7 @@
 #include "rtc.h"
 #include "SNTP.h"
 #include "Test.h"
+#include "Temp_Hum.h"
 
 extern char frase[30];
 extern uint8_t longitud;
@@ -137,7 +138,7 @@ int main(void)
 	Init_ThSNTP();
 	Init_ThRTC();
 	Init_Thread();
-	
+	Init_ThTemp_Hum();
 	
   /* Start thread execution */
   osKernelStart();
