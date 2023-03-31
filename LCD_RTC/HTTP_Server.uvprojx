@@ -448,6 +448,16 @@
               <FileType>5</FileType>
               <FilePath>.\Test.h</FilePath>
             </File>
+            <File>
+              <FileName>Temp_Hum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Temp_Hum.c</FilePath>
+            </File>
+            <File>
+              <FileName>Temp_Hum.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Temp_Hum.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1028,6 +1038,16 @@
               <FileName>Test.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Test.h</FilePath>
+            </File>
+            <File>
+              <FileName>Temp_Hum.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Temp_Hum.c</FilePath>
+            </File>
+            <File>
+              <FileName>Temp_Hum.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Temp_Hum.h</FilePath>
             </File>
           </Files>
         </Group>

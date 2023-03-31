@@ -65,7 +65,7 @@ void getLocalTime(uint32_t seconds)
   strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
 	
 	// Añadido    A lo mejor hay que pasarlo a (uint8_t)		**************************************************************
-	Set_RTC_Time(ts.tm_hour+1, ts.tm_min, ts.tm_sec);				// Hora + 1 porque el que devuelve está retrasado 1 hora
+	Set_RTC_Time(ts.tm_hour, ts.tm_min, ts.tm_sec);				// Hora + 1 porque el que devuelve está retrasado 1 hora
 	Set_RTC_Date(ts.tm_year-100, ts.tm_mon+1, ts.tm_wday, ts.tm_yday-18);
 	
 }
@@ -98,7 +98,7 @@ static void TimerSNTP_Callback(void const *arg)			// Callback creada para el tim
 ***************************************************************************************/
 int Init_timer_SNTP (void)
 {
-	exec = 8U;
+	exec = 12U;
 	timer_SNTP = osTimerNew((osTimerFunc_t)&TimerSNTP_Callback, osTimerOnce, &exec, NULL);				// Se ha elegido periodic para que se lance cada 3 minutos
 	if(timer_SNTP != NULL){
 		//status = osTimerStart(timer_id, 1000U);		// Esta parte es solo para verificar que no da errores
@@ -114,8 +114,9 @@ int Init_timer_SNTP (void)
 ***************************************************************************************/
 void STNP_Thread(void *argument) 
 {
+	Init_timer_SNTP();
 	while(1){
-		osTimerStart(timer_SNTP, 180000);
+		osTimerStart(timer_SNTP, 5000);
 		osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
 	}
 	

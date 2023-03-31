@@ -25,12 +25,18 @@ void Thread (void *argument) {
  
   while (1) {
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
+		
 		LCDDatos.horas = datosFechaHora.horas;
 		LCDDatos.minutos = datosFechaHora.minutos;
 		LCDDatos.segundos = datosFechaHora.segundos;
 		LCDDatos.anno = datosFechaHora.anno;
 		LCDDatos.mes = datosFechaHora.mes;
 		LCDDatos.dia = datosFechaHora.dia;
+		
+		// Esto es solo para testear el SHT30 sin incluir los ficheros
+		LCDDatos.temperatura = LCDDatos.temperatura + 1.73;
+		LCDDatos.humedad = LCDDatos.humedad + 3.46;
+		osDelay(500);
 		osMessageQueuePut(mid_MsgLCD, &LCDDatos, 0, 0);
   }
 }
