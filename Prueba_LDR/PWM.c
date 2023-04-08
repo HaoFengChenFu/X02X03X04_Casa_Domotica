@@ -71,8 +71,8 @@ void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, tru
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;			// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
 		
-		if (porcentaje < 85){
-		Channel_Tim4_Config.Pulse = 0;		// Ciclo de trabajo del 70 % para que no ilumine demasiado por la noche
+		if (porcentaje < 93){
+		Channel_Tim4_Config.Pulse = 0;		
 		}
 		else{
 		Channel_Tim4_Config.Pulse = 80*80;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
