@@ -45,6 +45,7 @@
 #include "SNTP.h"
 #include "Test.h"
 #include "Temp_Hum.h"
+#include "pulsador.h"
 
 extern char frase[30];
 extern uint8_t longitud;
@@ -139,6 +140,8 @@ int main(void)
 	Init_ThRTC();
 	Init_Thread();
 	Init_ThTemp_Hum();
+	Init_ThPulsador();
+	
 	
   /* Start thread execution */
   osKernelStart();

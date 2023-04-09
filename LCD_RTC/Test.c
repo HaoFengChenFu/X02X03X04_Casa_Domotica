@@ -2,6 +2,7 @@
 #include "rtc.h"
 #include "lcd.h"
 #include "Temp_Hum.h"
+#include "pulsador.h"
 /*----------------------------------------------------------------------------
  *      Thread 1 'Thread_Name': Sample thread
  *---------------------------------------------------------------------------*/
@@ -13,6 +14,9 @@ Mensaje_Temp_Hum datos_SHT30;
 extern osMessageQueueId_t mid_MsgRTC;
 extern osMessageQueueId_t mid_MsgLCD;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
+extern osMessageQueueId_t mid_MsgPulsador;
+static uint8_t modo;
+
 void Thread (void *argument);                   // thread function
 
 int Init_Thread (void) {
@@ -27,6 +31,11 @@ int Init_Thread (void) {
 void Thread (void *argument) {
  
   while (1) {
+		osMessageQueueGet(mid_MsgPulsador, &modo, 0, 0);
+
+		LCDDatos.modo = modo;
+
+		LCDDatos.consumo = LCDDatos.consumo + 4.37;
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
 		
 		LCDDatos.horas = datosFechaHora.horas;
