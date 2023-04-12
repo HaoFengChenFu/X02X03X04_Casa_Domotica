@@ -24,7 +24,7 @@ t <input type="hidden" value="rtc" name="pg">
 #    Las 2 lineas siguientes son para definir el largo de la celda y el color
 #
 t <table border=0 width=99%><font size="3">
-t <tr bgcolor=#aaccff>
+t <tr bgcolor=#00BB2D>
 t  <th width=50%>Tiempo y Fecha</th>
 t <tr>
 # text-align "center" pone el texto en el centro
