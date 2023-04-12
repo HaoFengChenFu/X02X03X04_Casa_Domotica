@@ -10,15 +10,17 @@ t <input type="hidden" value="Vent" name="pg">
 t <table border=0 width=99%><font size="3">
 t <tr bgcolor=#d0f37b>
 t  <th width=100%>Configuracion del Ventilador </th> </tr>
-t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px"
-t </font></table>
+t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px" /td>
 t <p align=left>
+t <tr>
+t <td align="center">
 t <form>
 t <input type="radio" id="VentEnable" name=VentHab value = "1">
 t <label for="VentEnable">Encender Ventilador</label><br>
 t <input type="radio" id="VentDisable" name=VentHab value = "0">
 t <label for="VentDisable">Apagar Ventilador</label><br>
 t </form>
+t </font></table>
 t <p align=center>
 t <input type=submit name=set value="Enviar" id="valor">
 t </p></form>
