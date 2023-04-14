@@ -4,6 +4,10 @@ static GPIO_InitTypeDef GPIO_InitStruct;
 
 static ADC_HandleTypeDef adc;
 
+extern osMessageQueueId_t mid_MsgPIR;
+static uint8_t movimiento;
+
+
 /*------------------------------------------------------------------------------
 										Variables de los Timers
 Importante Cambiar el nombre para evitar lios del nombre del timer o del canal usado
@@ -54,7 +58,9 @@ void Init_PWM_Pin(void)
 }
 
 /*---------------------------------------------------------------------------------------------------------
-				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
+				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro. 
+        Además, en función de la información recibida por el sensor PIR controlamos si se encienden o
+        se apagan las luces en funcion de si hay o no presencia en la casa.
  --------------------------------------------------------------------------------------------------------*/
 void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, true o false en funcion del un boton de la Web
 {	uint8_t porcentaje;
@@ -71,11 +77,17 @@ void Config_PWM_Pulse(float pulse, bool PWM_Habilitado)			// PWM_Habilitado, tru
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;			// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
 		
-		if (porcentaje < 93){
+		if (porcentaje < 93){//mucha luminosidad
 		Channel_Tim4_Config.Pulse = 0;		
 		}
-		else{
-		Channel_Tim4_Config.Pulse = 80*80;		// Si no se quiere cambiar la configuracion anterior, para el RGB se puede usar PERIODO - pulse*PERIODO/100
+		else if(porcentaje >= 93 && porcentaje < 95){//rango 1
+		Channel_Tim4_Config.Pulse = 80*50;				
+		}else if(porcentaje >= 95 && porcentaje <= 97){//rango 2
+		Channel_Tim4_Config.Pulse = 80*60;				
+		}else if(porcentaje >= 97 && porcentaje <= 99){//rango 3
+		Channel_Tim4_Config.Pulse = 80*70;				
+		}else if(porcentaje >= 99 && porcentaje <= 100){//rango 4
+		Channel_Tim4_Config.Pulse = 80*80;		
 		}
 		
 		HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_4);				// Es importante para configurar el canal
@@ -101,14 +113,13 @@ int Init_ThPWM (void) {
 void ThPWM (void *argument){
 float luzz=0;
 	while(1){
-	  //medida de luminosidad cada 1 segundo
-		osDelay(2000);
+		
+	  osMessageQueueGet(mid_MsgPIR, &movimiento, 0, 3000U);//ponemos 3 segundos porque el tiempo de retardo del PIR con el que toma medidas es este
 		ADC_Init_Single_Conversion(&adc,ADC1);
 		luzz=ADC_getVoltage(&adc,13);
-		
-		//actualizamos ancho del PWM (LEDS)
-		Config_PWM_Pulse(luzz,true);
-	
+		//actualizamos ancho del PWM (LEDS) en funcion de la info recogida
+		Config_PWM_Pulse(luzz,movimiento);
+
 	 osThreadYield();                            // suspend thread
 	}
 }

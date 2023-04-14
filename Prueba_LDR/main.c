@@ -42,6 +42,7 @@
 #include "configuracion.h"
 #include "PWM.h"
 #include "adc.h"
+#include "PIR.h"
 
 
 
@@ -121,6 +122,8 @@ int main(void)
 	configuracion();//init leds de unsuario
 	Init_PWM_Pin();//init PWM
 	ADC1_pins_F429ZI_config();//init ADC
+	Init_PIR_Pin();
+	Init_MsgPIR();
 	
 	
 	
