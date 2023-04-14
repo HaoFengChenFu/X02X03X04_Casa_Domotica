@@ -39,23 +39,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
-#include "lcd.h"
-#include "rtc.h"
-#include "SNTP.h"
+#include "Principal.h"
 
 
 
-
-extern RTC_HandleTypeDef hrtc;
-extern RTC_AlarmTypeDef sAlarm;			// La s es de set, se usaría g si fuese get
-extern RTC_TimeTypeDef sTime;
-extern RTC_DateTypeDef sDate;
-
-extern char timeString[30];
-extern char dateString[30];
-
-void rtc_app(void *arg); 
 
 #ifdef RTE_CMSIS_RTOS2_RTX5
 /**
@@ -127,10 +114,15 @@ int main(void)
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
 
-  /* Create application main thread */
+	// Inicializar los pines sin hilos
+	Init_All_Pins();
+
+
   osThreadNew(app_main, NULL, &app_main_attr);
 	
-	osThreadNew(rtc_app, NULL, NULL);
+	
+	// Inicializar los threads
+	Init_All_Threads();
 	
 	
   /* Start thread execution */
@@ -143,22 +135,6 @@ int main(void)
   }
 }
 
-void rtc_app (void *arg) {
-	
-	LCD_reset();
-	LCD_Init();
-	LCD_clear();
-	
-
-	RTC_Init();
-	Init_ThSNTP();
-  
-  
-  while(1) {
-		Display_Date_Time();
-		osDelay(1000);	
-  }
-}
 
 /**
   * @brief  System Clock Configuration

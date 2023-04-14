@@ -13,16 +13,8 @@
 #include "rl_net.h"                     // Keil.MDK-Pro::Network:CORE
 
 #include "lcd.h"				// MODIFICADO
-#include "adc.h"				// MODIFICADO
 #include "rtc.h"				// MODIFICADO
 #include "SNTP.h"
-
-
-ADC_HandleTypeDef adchandle; //handler definition
-extern char timeString[30];
-extern char dateString[30];
-
-extern char Time_Date[60];
 
 
 //#include "Board_LED.h"                  // ::Board Support:LED
@@ -121,32 +113,8 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
     return;
   }
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
   P2 = 0;
-  LEDrun = true;
   if (len == 0) {
-    // No data or all items (radio, checkbox) are off
-    //LED_SetOut (P2);
     return;
   }
   passw[0] = 1;
@@ -154,71 +122,16 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
     // Parse all parameters
     data = netCGI_GetEnvVar (data, var, sizeof (var));
     if (var[0] != 0) {
-      // First character is non-null, string exists
-      if (strcmp (var, "led0=on") == 0) {
-        P2 |= 0x01;
-				HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-      }
-      else if (strcmp (var, "led1=on") == 0) {
-        P2 |= 0x02;
-				HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-      }
-      else if (strcmp (var, "led2=on") == 0) {
-        P2 |= 0x04;
-				HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
-      }
-      else if (strcmp (var, "led3=on") == 0) {
-        P2 |= 0x08;
-      }
-      else if (strcmp (var, "led4=on") == 0) {
-        P2 |= 0x10;
-      }
-      else if (strcmp (var, "led5=on") == 0) {
-        P2 |= 0x20;
-      }
-      else if (strcmp (var, "led6=on") == 0) {
-        P2 |= 0x40;
-      }
-      else if (strcmp (var, "led7=on") == 0) {
-        P2 |= 0x80;
-      }
-      else if (strcmp (var, "ctrl=Browser") == 0) {
-        LEDrun = false;
-      }
-      else if ((strncmp (var, "pw0=", 4) == 0) ||
-               (strncmp (var, "pw2=", 4) == 0)) {
-        // Change password, retyped password
-        if (netHTTPs_LoginActive()) {
-          if (passw[0] == 1) {
-            strcpy (passw, var+4);
-          }
-          else if (strcmp (passw, var+4) == 0) {
-            // Both strings are equal, change the password
-            netHTTPs_SetPassword (passw);
-          }
-        }
-      }
-      else if (strncmp (var, "lcd1=", 5) == 0) {		//********************************  LCD  *************************************************************
-        // LCD Module line 1 text
-        strcpy (lcd_text[0], var+5);
-       // osThreadFlagsSet (TID_Display, 0x01);
-				
-				
-				LCD_clear();
-				LCD_symbolToLocalBuffer_L1(lcd_text[0], strlen(lcd_text[0]));
 
+      if (strcmp (var, "VentHab=1") == 0) {
+        // Encender el ventilador
       }
-      else if (strncmp (var, "lcd2=", 5) == 0) {		//********************************  LCD  *************************************************************
-        // LCD Module line 2 text
-        strcpy (lcd_text[1], var+5);
-       // osThreadFlagsSet (TID_Display, 0x01);
-				
-				
-				LCD_symbolToLocalBuffer_L2(lcd_text[1], strlen(lcd_text[1]));
-      }
+			else if (strcmp (var, "VentHab=0") == 0){
+				// Apagar el ventilador
+			}
     }
   } while (data);
-  //LED_SetOut (P2);
+
 }
 
 // Generate dynamic web data from a script line.
@@ -229,7 +142,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
   const char *lang;
   uint32_t len = 0U;
   uint8_t id;
-  static uint32_t adv;
   netIF_Option opt = netIF_OptionMAC_Address;
   int16_t      typ = 0;
 
@@ -344,93 +256,27 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       /* More sockets to go, set a repeat flag */
       len |= (1u << 31);
       break;
-
-    case 'd':
-      // System password from 'system.cgi'
-      switch (env[2]) {
-        case '1':
-          len = (uint32_t)sprintf (buf, &env[4], netHTTPs_LoginActive() ? "Enabled" : "Disabled");
-          break;
-        case '2':
-          len = (uint32_t)sprintf (buf, &env[4], netHTTPs_GetPassword());
-          break;
-      }
-      break;
-
-    case 'e':
-      // Browser Language from 'language.cgi'
-      lang = netHTTPs_GetLanguage();
-      if      (strncmp (lang, "en", 2) == 0) {
-        lang = "English";
-      }
-      else if (strncmp (lang, "de", 2) == 0) {
-        lang = "German";
-      }
-      else if (strncmp (lang, "fr", 2) == 0) {
-        lang = "French";
-      }
-      else if (strncmp (lang, "sl", 2) == 0) {
-        lang = "Slovene";
-      }
-      else {
-        lang = "Unknown";
-      }
-      len = (uint32_t)sprintf (buf, &env[2], lang, netHTTPs_GetLanguage());
-      break;
-
-    case 'f':
-      // LCD Module control from 'lcd.cgi'
-      switch (env[2]) {
-        case '1':
-          len = (uint32_t)sprintf (buf, &env[4], lcd_text[0]);
-          break;
-        case '2':
-          len = (uint32_t)sprintf (buf, &env[4], lcd_text[1]);
-          break;
-      }
-      break;
-
-    case 'g':
-      // AD Input from 'ad.cgi'
-      switch (env[2]) {
-        case '1':		// Value
-          adv = AD_in (10);
-          len = (uint32_t)sprintf (buf, &env[4], adv);
-          break;
-        case '2':		// Voltios
-																													//len = (uint32_t)sprintf (buf, &env[4], (double)((float)adv*3.3f)/4096);
-					len = (uint32_t)sprintf (buf, &env[4], (adv*3.3)/4096);
-          break;
-        case '3':		// Barra
-          adv = (adv * 100) / 4096;												// Es lo maximo que puede llegar la barra
-																													//len = (uint32_t)sprintf (buf, &env[4], adv);
-					len = (uint32_t)sprintf (buf, &env[4], adv);
-          break;
-      }
-      break;
 		
-		case 'h':
-			Get_String_Date_Time();
-			len = (uint32_t)sprintf (buf, &env[4], Time_Date);
+		case 'h':				// Refresco de la Humedad Relativa
 
 			break;
 			
-    case 'i':		// Es para recargar el tiempo y la fecha
-			Get_String_Date_Time();
-      len = (uint32_t)sprintf (buf, &env[1], Time_Date);
+
+    case 'l':				// Refresco de la Luminosidad
+
       break;
 		
-    case 'x':		// Es para recargar
-      // AD Input from 'ad.cgx'
-      adv = AD_in (10);
-      len = (uint32_t)sprintf (buf, &env[1], adv);
+		
+    case 'r':				// Refresco del RTC
+
+      break;
+		
+		
+    case 't':				// Refresco de la Temperatura
+
       break;
 
-    case 'y':
-      // Button state from 'button.cgx'
-//      len = (uint32_t)sprintf (buf, "<checkbox><id>button%c</id><on>%s</on></checkbox>",
-//                               env[1], (get_button () & (1 << (env[1]-'0'))) ? "true" : "false");
-      break;
+
   }
   return (len);
 }

@@ -1,44 +1,35 @@
-#include "main.h"					
-#include "RTE_Device.h"
-#include "Driver_SPI.h"
-#include "Arial12x12.h"		// Solo hace falta definirla donde se vaya a usar o sino dara errores innecesarios
-#include "string.h"				// Usamos esta libreria para usar strlen
-#include "stdio.h"				// Enunciado del ejercicio, queremos usar sprintf()
-#include "cmsis_os2.h"
-#include "lcd.h"					// Obviamente hay que incluir su propia libreria
-
-/*******************************************
+#include "lcd.h"
+#include "Arial12x12.h"
+/*-----------------------------------------
 			Cabecera de las funciones
-*******************************************/
+------------------------------------------*/
 static void Reset_Signal(void);
 static void SPI_Init(void);
 static void LCD_wr_data(unsigned char data);
 static void LCD_wr_cmd(unsigned char cmd);
+void ThLCD (void *argument);                   // thread function
+int Init_MsgLCD(void);
 
-/*******************************************
+/*-----------------------------------------
 							Variable
-*******************************************/
+------------------------------------------*/
 extern ARM_DRIVER_SPI Driver_SPI1;		// Lo definimos aqui porque usamos la libreria "Driver_SPI.h" en este fichero
 ARM_DRIVER_SPI* SPIdrv = &Driver_SPI1;
 
 ARM_SPI_STATUS state;
 
-static GPIO_InitTypeDef GPIO_InitStruct;
+osThreadId_t tid_ThLCD;                        // thread id
 TIM_HandleTypeDef htim7;			// Recordar añadir el TIM para que no haya errores
+osMessageQueueId_t mid_MsgLCD;
 
-unsigned char buffer[512];
+char frase[30];
+uint8_t longitud;
+static unsigned char buffer[512];
+static DatosLCD datos;
 
-/*******************************************
-				Array de las figuras
-*******************************************/
-
-uint8_t cuadrado[8] = {0xFF, 0x81, 0x81, 0x81, 0x81, 0x81, 0x81, 0xFF};
-
-uint8_t circulo[8] = {0x3C, 0x66, 0xC3, 0x81, 0x81, 0xC3, 0x66, 0x3C};
-
-uint8_t flechaArriba[8] = {0x00, 0x04, 0x06, 0xFF, 0xFF, 0x06, 0x04, 0x00};
-uint8_t flechaAbajo[8] = {0x00, 0x20, 0x60, 0xFF, 0xFF, 0x60, 0x20, 0x00};
-
+/*-----------------------------------------
+					Señal de reset
+------------------------------------------*/
 static void Reset_Signal(void)
 	{
 	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_6, GPIO_PIN_RESET);
@@ -47,9 +38,12 @@ static void Reset_Signal(void)
 	delay(1000);
 }
 
+/*-----------------------------------------
+					Funcion de reset
+------------------------------------------*/
 void LCD_reset(void)
-	{
-	
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
 	SPI_Init();
 	
 	__HAL_RCC_GPIOF_CLK_ENABLE();
@@ -76,16 +70,17 @@ void LCD_reset(void)
 	delay(1000);
 
 	Reset_Signal();
-
 }
 
+/*-----------------------------------------
+				Inicializacion del LCD
+------------------------------------------*/
 static void SPI_Init(void)
 	{
 	__SPI1_CLK_ENABLE();
 	SPIdrv->Initialize(NULL);
 	SPIdrv->PowerControl(ARM_POWER_FULL);
-	SPIdrv->Control(ARM_SPI_MODE_MASTER | ARM_SPI_CPOL1_CPHA1 | ARM_SPI_MSB_LSB | ARM_SPI_DATA_BITS(8), 20000000);
-																																																								
+	SPIdrv->Control(ARM_SPI_MODE_MASTER | ARM_SPI_CPOL1_CPHA1 | ARM_SPI_MSB_LSB | ARM_SPI_DATA_BITS(8), 20000000);																																																					
 }
 
 void delay (uint32_t microsegundos)
@@ -269,4 +264,58 @@ void LCD_clear(void)
 		buffer[i]=0x00;
 	}	
 	LCD_update();
+}
+
+/*------------------------------------------------------------------------------
+												Inicio del Thread
+-------------------------------------------------------------------------------*/
+int Init_ThLCD (void) {
+  tid_ThLCD = osThreadNew(ThLCD, NULL, NULL);
+  if (tid_ThLCD == NULL) {
+    return(-1);
+  }
+	LCD_reset();
+	LCD_Init();
+	LCD_clear();
+	
+  return(0);
+}
+
+/*------------------------------------------------------------------
+						Iniciacion de la cola de mensajes
+ -----------------------------------------------------------------*/
+int Init_MsgLCD(void)
+{
+	osStatus_t status;
+	mid_MsgLCD = osMessageQueueNew(4, sizeof(DatosLCD), NULL);
+	if (mid_MsgLCD != NULL){
+			if( status != osOK){
+				return -1;
+			}
+	}
+	return 0;
+}
+
+void ThLCD (void *argument) {
+	Init_MsgLCD();
+	
+  while (1) {
+		osMessageQueueGet(mid_MsgLCD, &datos, 0, 0);
+		LCD_clear();
+		switch(datos.modo){
+			case 0:
+				longitud = sprintf(frase, "H:%.2d:%.2d:%.2d  T:%.2f|C", datos.horas, datos.minutos, datos.segundos, datos.temperatura);
+				symbolToLocalBuffer(1, frase, longitud);
+				longitud = sprintf(frase, "F:%.2d-%.2d-%.2d H:%.2f%%", datos.dia, datos.mes, datos.anno+2000, datos.humedad);
+				symbolToLocalBuffer(2, frase, longitud);
+			break;
+			
+			case 1:
+				longitud = sprintf(frase, "Consumo: %.2f mA", datos.consumo);
+				symbolToLocalBuffer(1, frase, longitud);
+			break;
+		}
+		osDelay(100);
+		osThreadYield();
+  }
 }
