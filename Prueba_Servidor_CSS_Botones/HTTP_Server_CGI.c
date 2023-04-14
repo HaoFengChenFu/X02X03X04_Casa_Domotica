@@ -283,10 +283,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 
       break;
 
-		
-    case 'v':				// Refresco de las Vibraciones
-
-      break;
 
   }
   return (len);

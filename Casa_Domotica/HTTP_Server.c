@@ -21,10 +21,6 @@
 
 
 
-#include "lcd.h"
-#include "adc.h"
-
-
 
 // Main stack size must be multiple of 8 Bytes
 #define APP_MAIN_STK_SZ (1024U)
@@ -176,22 +172,13 @@ void netDHCP_Notify (uint32_t if_num, uint8_t option, const uint8_t *val, uint32
 __NO_RETURN void app_main (void *arg) {
   (void)arg;
 
-  //LED_Initialize();
-  //Buttons_Initialize();
-  //ADC_Initialize();
+	
+	
+	
 
   netInitialize ();
-	
-	LCD_reset();
-	LCD_Init();
-	LCD_clear();
 
-	
-	ADC1_pins_F429ZI_config();
 
-  //TID_Led     = osThreadNew (BlinkLed, NULL, NULL);
-  //TID_Display = osThreadNew (Display,  NULL, NULL);
-	
 	
   osThreadExit();
 }
