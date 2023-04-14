@@ -118,9 +118,8 @@ int main(void)
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
-	
+	Init_ThPulsador();
 	Init_Thread();
-	Init_MsgPIR();
 	
   /* Start thread execution */
   osKernelStart();
