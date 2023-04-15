@@ -105,6 +105,6 @@ void ThPulsador (void *argument) {
   while (1) {
     osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
     osTimerStart(timer_rebotes, 50);    // Esperamos 50 ms
-
+		osThreadYield();
   }
 }

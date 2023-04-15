@@ -5,7 +5,7 @@ osThreadId_t tid_ThPIR;
 /*------------------------------------------------------------------
             Variables del timer virtual
  -----------------------------------------------------------------*/
-static osTimerId_t timer_rebotes;
+static osTimerId_t timer_PIR;
 static uint32_t exec;
 
 osMessageQueueId_t mid_MsgPIR;
@@ -63,8 +63,8 @@ int Init_timer_PIR (void)
 {
 	osStatus_t status;
   exec = 5U;
-  timer_rebotes = osTimerNew((osTimerFunc_t)&Timer_PIR_Callback, osTimerOnce, &exec, NULL);
-  if(timer_rebotes != NULL){
+  timer_PIR = osTimerNew((osTimerFunc_t)&Timer_PIR_Callback, osTimerOnce, &exec, NULL);
+  if(timer_PIR != NULL){
     if( status != osOK){
       return -1;
     }
@@ -101,7 +101,7 @@ void ThPIR (void *argument)
     osMessageQueuePut(mid_MsgPIR, &movimiento, 0, 0);
 		
     osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);		// Esperamos hasta que no haya movimiento para apagar las luces
-    osTimerStart(timer_rebotes, 5000);    // Esperamos 5 segundos
-
+    osTimerStart(timer_PIR, 5000);    // Esperamos 5 segundos
+		osThreadYield();  
   }
 }

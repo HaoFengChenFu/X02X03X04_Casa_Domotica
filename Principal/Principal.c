@@ -1,6 +1,5 @@
 #include "Principal.h"
 
-
 /*-------------------------------
   	Hilo Principal: Variables
  *-------------------------------*/
@@ -11,17 +10,21 @@ static FechaHora datosFechaHora;
 static DatosLCD LCDDatos;
 static Mensaje_Temp_Hum datos_SHT30;
 
+Mensaje_Iluminacion datos_luz;
+
 extern osMessageQueueId_t mid_MsgPIR;
 extern osMessageQueueId_t mid_MsgRTC;
 extern osMessageQueueId_t mid_MsgLCD;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
 extern osMessageQueueId_t mid_MsgPulsador;
 
+extern osMessageQueueId_t mid_Msg_Ventilador_Temphum;
+extern osMessageQueueId_t mid_MsgLDR;
+extern osMessageQueueId_t mid_MsgIluminacion;
+
 /*****
 Aqui hay que incluir la cola de mensajes del mando, sensor sismico, LDR, etc.
 *****/
-
-static uint8_t modo;
 
 void ThPrincipal (void *argument); 
 
@@ -36,30 +39,15 @@ int Init_ThPrincipal (void) {
   return(0);
 }
 
-/*-----------------------------------------------------------------
-HAY QUE ELIMINARLO: Es solo para probar la comunicacion del PIR
------------------------------------------------------------------*/
-void LED_Init(void){
-	GPIO_InitTypeDef GPIO_InitStruct;
-	__HAL_RCC_GPIOB_CLK_ENABLE();
-	
-	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_PULLUP; /*Elegimos modo Pull Up*/
-	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH; /*Elegimos la velocidad*/
-		
-	GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_7|GPIO_PIN_14;
-	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-		
-}
-//----------------------------------------------------------------------------------------------------------
-
 /*---------------------------------------
 			Inicializar los pines
  *-------------------------------------*/
 void Init_All_Pins(void){
 	Init_Pin_Pulsador();
 	Init_PIR_Pin();
-	LED_Init();
+	Init_PWM_Pin();
+	init_servo();
+	init_ventilador();
 }
 
 /*---------------------------------------
@@ -72,6 +60,10 @@ void Init_All_Threads (void){
 	Init_ThSNTP();
 	Init_ThTemp_Hum();
 	Init_ThPIR();
+	
+	Init_ThThermostato();
+	Init_ThLDR();
+	Init_ThIluminacion();
 }
 
 
@@ -80,23 +72,33 @@ void Init_All_Threads (void){
  *---------------------------------------------------------------------------*/
 void ThPrincipal (void *argument) {
 	uint8_t encender_luces = 0;
+	uint8_t porcentaje = 0;
+	uint8_t modo = 0;
   while (1) {
-	  
+
+		/* ---------------------------------------------------------------------
+							Obtencion de informacion de los modulos de entrada
+		--------------------------------------------------------------------- */
 		osMessageQueueGet(mid_MsgPulsador, &modo, 0, 0);
 		osMessageQueueGet(mid_MsgPIR, &encender_luces, 0, 0);
-		
-		if(encender_luces==1){
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_SET);
-		}
-		else{
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);
-		}
-		
-		LCDDatos.modo = modo;
-		//---------------------------------------------------------------------------------------------------------------------------
-		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
-		//---------------------------------------------------------------------------------------------------------------------------
+		osMessageQueueGet(mid_MsgLDR, &porcentaje, 0, 0);
+		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
+		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
+		
+		/* ---------------------------------------------------------------------
+			 Asignacion de valores para enviar mensajes a los módulos de salida
+		--------------------------------------------------------------------- */
+		LCDDatos.modo = modo;
+		
+		if(datos_luz.porcentaje_pulso != porcentaje || datos_luz.encender_luz != encender_luces){
+			datos_luz.porcentaje_pulso = porcentaje;
+			datos_luz.encender_luz = encender_luces;
+			osMessageQueuePut(mid_MsgIluminacion, &datos_luz, 0, osWaitForever);
+		}
+			
+		LCDDatos.temperatura = datos_SHT30.temperatura;
+		LCDDatos.humedad = datos_SHT30.humedad;
 		
 		LCDDatos.horas = datosFechaHora.horas;
 		LCDDatos.minutos = datosFechaHora.minutos;
@@ -105,11 +107,16 @@ void ThPrincipal (void *argument) {
 		LCDDatos.mes = datosFechaHora.mes;
 		LCDDatos.dia = datosFechaHora.dia;
 		
-		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
-		LCDDatos.temperatura = datos_SHT30.temperatura;
-		LCDDatos.humedad = datos_SHT30.humedad;
+		//---------------------------------------------------------------------------------------------------------------------------
+		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
+		//---------------------------------------------------------------------------------------------------------------------------
 		
-		osDelay(500);
+
+		/* ---------------------------------------------------
+				Envio de mensajes a los modulos de salida
+		---------------------------------------------------- */
 		osMessageQueuePut(mid_MsgLCD, &LCDDatos, 0, 0);
+		osDelay(250);		// Para evitar que se este actualizando todo el rato
+		osThreadYield();
   }
 }

@@ -10,6 +10,11 @@
 	#include "pulsador.h"
 	#include "PIR.h"
 	
+	#include "ThTermostato.h"
+	//#include "PWM.h"
+	#include "Iluminacion.h"
+	#include "LDR.h"
+	
 	int Init_ThPrincipal (void);
 	void Init_All_Pins (void);
 	void Init_All_Threads (void);
