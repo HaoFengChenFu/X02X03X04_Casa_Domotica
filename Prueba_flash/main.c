@@ -40,6 +40,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "configuracion.h"
+#include "flashLib.h"
 
 
 
@@ -86,6 +87,7 @@ uint32_t HAL_GetTick (void) {
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+uint32_t *buffer_lectura=0;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
@@ -118,10 +120,28 @@ int main(void)
      */
 	//INICIALIZACIÓN DE COMPONENTES
 	configuracion();//init leds de unsuario
-
+  
 	
+	//PRUEBA FLASH 1
+  
+	uint32_t data1[] = {0x12,0x23,0x35,0x47,0x58,0x68,0x78,0x88,0x98};
+	escritura_flash(FLASH_SECTOR_9 ,1,FLASH_VOLTAGE_RANGE_3, 9 , 0x080A0100 , data1);
+	buffer_lectura = lectura_flash(0x080A0100, 9);
 	
+	for(int i=0;i<9;i++){
+	printf("dato leido: %08X\n", buffer_lectura[i]);
+	}
 	
+	//PRUEBA FLASH 2 (NO FUNCIONA TODAVIA ESTA PRUEBA)
+	/*
+	char * data2 = "prueba escritura\n";
+	int numero_palabras= num_palabras(data2);
+	escritura_flash(FLASH_SECTOR_8 ,1,FLASH_VOLTAGE_RANGE_3, numero_palabras , 0x08080100 , (uint32_t*)data2);
+	buffer_lectura = lectura_flash(0x08080100, numero_palabras );
+	char* buffer_rx;
+	conversion_string(buffer_lectura,buffer_rx);
+	printf("%s ", buffer_rx);
+	*/
 	
 	
 
