@@ -11,9 +11,18 @@
 	#include "PIR.h"
 	
 	#include "ThTermostato.h"
-	//#include "PWM.h"
 	#include "Iluminacion.h"
 	#include "LDR.h"
+	
+	typedef struct{
+		uint8_t horas;
+		uint8_t minutos;
+		uint8_t segundos;
+		
+		uint8_t anno;
+		uint8_t mes;
+		uint8_t dia;
+	}Tiempo_Fecha;
 	
 	int Init_ThPrincipal (void);
 	void Init_All_Pins (void);

@@ -11,17 +11,19 @@
 #include <string.h>
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #include "rl_net.h"                     // Keil.MDK-Pro::Network:CORE
+#include "stdlib.h"				// Para usar el atoi
 
-#include "lcd.h"				// MODIFICADO
-#include "rtc.h"				// MODIFICADO
-#include "SNTP.h"
+#include "Principal.h"
+
+char Time_Date[60];
+uint8_t umbralTemp;
+
+extern Mensaje_Temp_Hum datos_SHT30;
+extern Tiempo_Fecha datos_horarios;
+extern Mensaje_Iluminacion datos_luz;
 
 
-ADC_HandleTypeDef adchandle; //handler definition
-extern char timeString[30];
-extern char dateString[30];
 
-extern char Time_Date[60];
 
 
 //#include "Board_LED.h"                  // ::Board Support:LED
@@ -130,12 +132,28 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
     data = netCGI_GetEnvVar (data, var, sizeof (var));
     if (var[0] != 0) {
 
-      if (strcmp (var, "VentHab=1") == 0) {
+      if (strcmp (var, "LumHab=1") == 0) {
         // Encender el ventilador
+				printf("Encendido forzado de las luces Falta asignar el codigo\n");
+      }
+			else if (strcmp (var, "LumHab=0") == 0){
+				// Apagar el ventilador
+				printf("Apagado forzado de las luces Falta asignar el codigo\n");
+			}
+      else if (strcmp (var, "VentHab=1") == 0) {
+        // Encender el ventilador
+				printf("Encendido forzado del ventilador Falta asignar el codigo\n");
       }
 			else if (strcmp (var, "VentHab=0") == 0){
 				// Apagar el ventilador
+				printf("Apagado forzado del ventilador: Falta asignar el codigo\n");
 			}
+      else if (strncmp (var, "UmbralTemp=", strlen("UmbralTemp=")) == 0) {
+				
+				umbralTemp = atoi(&var[11]);
+				printf("Valor del pulso: %d ºC\n", umbralTemp);
+				printf("Falta saber por donde se va a enviar\n");
+      }
     }
   } while (data);
 
@@ -265,22 +283,25 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 		
 		case 'h':				// Refresco de la Humedad Relativa
-
+          len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.humedad);
 			break;
 			
 
     case 'l':				// Refresco de la Luminosidad
-
+          len = (uint32_t)sprintf (buf, &env[4], datos_luz.porcentaje_pulso);
       break;
 		
 		
     case 'r':				// Refresco del RTC
-
+					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d  /  Fecha: %.2d-%.2d-%.4d ", 
+					datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
+		
+          len = (uint32_t)sprintf (buf, &env[4], Time_Date);
       break;
 		
 		
     case 't':				// Refresco de la Temperatura
-
+          len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.temperatura);
       break;
 
 

@@ -8,8 +8,8 @@ osThreadId_t tid_ThPrincipal;
 
 static FechaHora datosFechaHora;
 static DatosLCD LCDDatos;
-static Mensaje_Temp_Hum datos_SHT30;
-
+Mensaje_Temp_Hum datos_SHT30;
+Tiempo_Fecha datos_horarios;
 Mensaje_Iluminacion datos_luz;
 
 extern osMessageQueueId_t mid_MsgPIR;
@@ -46,8 +46,8 @@ void Init_All_Pins(void){
 	Init_Pin_Pulsador();
 	Init_PIR_Pin();
 	Init_PWM_Pin();
-	init_servo();
-	init_ventilador();
+	//init_servo();
+	//init_ventilador();
 }
 
 /*---------------------------------------
@@ -61,9 +61,11 @@ void Init_All_Threads (void){
 	Init_ThTemp_Hum();
 	Init_ThPIR();
 	
-	Init_ThThermostato();
 	Init_ThLDR();
 	Init_ThIluminacion();
+	
+	//Init_ThThermostato();
+
 }
 
 
@@ -100,12 +102,12 @@ void ThPrincipal (void *argument) {
 		LCDDatos.temperatura = datos_SHT30.temperatura;
 		LCDDatos.humedad = datos_SHT30.humedad;
 		
-		LCDDatos.horas = datosFechaHora.horas;
-		LCDDatos.minutos = datosFechaHora.minutos;
-		LCDDatos.segundos = datosFechaHora.segundos;
-		LCDDatos.anno = datosFechaHora.anno;
-		LCDDatos.mes = datosFechaHora.mes;
-		LCDDatos.dia = datosFechaHora.dia;
+		LCDDatos.horas = datos_horarios.horas = datosFechaHora.horas;
+		LCDDatos.minutos = datos_horarios.minutos = datosFechaHora.minutos;
+		LCDDatos.segundos = datos_horarios.segundos = datosFechaHora.segundos;
+		LCDDatos.anno = datos_horarios.anno = datosFechaHora.anno;
+		LCDDatos.mes = datos_horarios.mes = datosFechaHora.mes;
+		LCDDatos.dia = datos_horarios.dia = datosFechaHora.dia;
 		
 		//---------------------------------------------------------------------------------------------------------------------------
 		LCDDatos.consumo = 0; // Aqui debe ir el de consumo

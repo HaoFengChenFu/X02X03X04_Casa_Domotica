@@ -153,29 +153,12 @@
           <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>133</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134220542</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\HTTP_Server_CGI.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\HTTP_Server\HTTP_Server_CGI.c\133</Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>datos_luz</ItemText>
+          <ItemText>datos_luz,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
@@ -191,6 +174,11 @@
           <count>3</count>
           <WinNumber>1</WinNumber>
           <ItemText>infoLuz,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>porcentaje</ItemText>
         </Ww>
       </WatchWindow1>
       <ScvdPack>

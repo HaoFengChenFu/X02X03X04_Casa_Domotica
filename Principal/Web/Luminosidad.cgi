@@ -25,9 +25,9 @@ t <form action="Luminosidad.cgi" method="post" name="luminosidad">
 t <input type="hidden" value="luminosidad" name="pg">
 t <form><h4>
 t <input type="radio" id="LumEnable" name=LumHab value = "1">
-t <label for="VentEnable">Encender Luces</label><br>
-t <input type="radio" id="LumEnable" name=LumHab value = "0">
-t <label for="VentDisable">Apagar Luces</label><br>
+t <label for="LumEnable">Encender Luces</label><br>
+t <input type="radio" id="LumDisable" name=LumHab value = "0">
+t <label for="LumEnable">Apagar Luces</label><br>
 t </h4>
 t <br>
 t </form>
