@@ -1,13 +1,10 @@
-t <html><head><title>Control de HUmedad</title>
+t <html><head><title>Control de Humedad</title>
 t <script language=JavaScript type="text/javascript" src="xml_http.js"></script>
 t <script language=JavaScript type="text/javascript">
 # Define URL and refresh timeout
 t var HumedadUpdate = new periodicObj("Humedad.cgx", 1000);
 t function updateValueHumedad() {
 t  HumedadVal = document.getElementById("valor_humedad").value;
-t }
-t function updateHumedad() {
-t  Val_hume = document.getElementById("valor_humedad").value;
 t }
 t function periodicUpdateHumedad() {
 t  if(document.getElementById("adChkBox").checked == true) {
@@ -28,7 +25,7 @@ t <tr bgcolor=#00AAE4>
 t  <th width=30%>Humedad</th>
 t <tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
-c h size="60" id="valor_humedad" value="%5f %"></td>
+c h size="60" id="valor_humedad" value="%5.2f %%"></td>
 t </font></table>
 t <p align=center>
 t <input type=button value="Actualizar Humedad" onclick="updateMultiple(updateHumedad,updateValueHumedad)">

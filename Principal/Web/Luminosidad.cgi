@@ -6,9 +6,6 @@ t var LuxUpdate = new periodicObj("Luminosidad.cgx", 1000);
 t function updateValueLux() {
 t  LuxVal = document.getElementById("lum").value;
 t }
-t function updateLux() {
-t  Val_Lux = document.getElementById("lum").value;
-t }
 t function periodicUpdateLux() {
 t  if(document.getElementById("adChkBox").checked == true) {
 t   updateMultiple(LuxUpdate,updateValueLux);
