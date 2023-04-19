@@ -13,7 +13,7 @@
 
 	int Init_ThThermostato (void);//init thread
   void init_ventilador(void);//inicializacion pin ventilador
-	int Init_Ventilador_MsgTemp_Hum (void);
+	int Init_Ventilador_Msg (void);
 	void encender_ventilador(void);
   void apagar_ventilador(void);
 	void move_servo(void);

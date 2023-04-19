@@ -22,7 +22,7 @@ extern osMessageQueueId_t mid_MsgLCD;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
 extern osMessageQueueId_t mid_MsgPulsador;
 
-extern osMessageQueueId_t mid_Msg_Ventilador_Temphum;
+extern osMessageQueueId_t mid_Msg_Ventilador;
 extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgIluminacion;
 
@@ -34,9 +34,7 @@ Aqui hay que incluir la cola de mensajes del mando, sensor sismico, LDR, etc.
 void ThPrincipal (void *argument); 
 
 int Init_ThPrincipal (void) {
-	osThreadAttr_t prueba;
-	prueba.stack_size = 3840;
-	
+
   tid_ThPrincipal = osThreadNew(ThPrincipal, NULL, NULL);
   if (tid_ThPrincipal == NULL) {
     return(-1);
@@ -61,17 +59,18 @@ void Init_All_Pins(void){
 			Inicializar los hilos
  *-------------------------------------*/
 void Init_All_Threads (void){
+	Init_ThThermostato();
 	Init_ThLCD();
 	Init_ThPulsador();
 	Init_ThRTC();
 	Init_ThSNTP();
 	Init_ThTemp_Hum();
 	Init_ThPIR();
-	
 	Init_ThLDR();
+	// El siguiente hilo no se crea,  por que ???
 	Init_ThIluminacion();
 	
-	Init_ThThermostato();
+
 
 }
 
@@ -124,7 +123,7 @@ void ThPrincipal (void *argument) {
 		encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;
 		
 		if(encender_vent != encender_vent_anterior){
-			osMessageQueuePut(mid_Msg_Ventilador_Temphum, &encender_vent, 0, 0);
+			osMessageQueuePut(mid_Msg_Ventilador, &encender_vent, 0, 0);
 		}
 		
 		encender_vent_anterior = encender_vent;
