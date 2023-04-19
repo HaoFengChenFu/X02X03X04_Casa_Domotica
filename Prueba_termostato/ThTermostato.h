@@ -7,6 +7,8 @@
 	
 	
 	#define UMBRAL 20 //temperatura umbral para encender el ventilador
+	#define PRESCALER_TIM3 210-1
+	#define PERIOD_TIM3 8000-1
 	
 	typedef struct
 	{
@@ -20,5 +22,10 @@
 	int Init_Ventilador_MsgTemp_Hum (void);
 	void encender_ventilador(void);
   void apagar_ventilador(void);
+	void move_servo(void);
+	void stop_servo(void);
+	void init_servo(void);
+	
+	
 	
 #endif

@@ -418,6 +418,16 @@
               <FileType>5</FileType>
               <FilePath>.\adc.h</FilePath>
             </File>
+            <File>
+              <FileName>PIR.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PIR.c</FilePath>
+            </File>
+            <File>
+              <FileName>PIR.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\PIR.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
