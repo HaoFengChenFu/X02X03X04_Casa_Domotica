@@ -26,8 +26,6 @@ static void Init_servo_Timer_periodic (void);
 osMessageQueueId_t mid_Msg_Ventilador_Temphum;//id cola que se comunicara con thread principal
 uint8_t encender;
 
-static bool ventilador_encendido=false;//guardamos el estado del ventilador
-
 
  
 int Init_ThThermostato (void) {
@@ -81,7 +79,7 @@ void init_ventilador(void){//PC6
  -----------------------------------------------------------------*/
 void encender_ventilador(void){
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-	ventilador_encendido=true;
+
 }
 /*------------------------------------------------------------------
 				Apagar ventilador
@@ -89,7 +87,7 @@ void encender_ventilador(void){
 void apagar_ventilador(void){
 	
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
-	ventilador_encendido=false;
+
 	
 }
 

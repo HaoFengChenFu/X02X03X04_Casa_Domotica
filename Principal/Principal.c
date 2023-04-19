@@ -12,6 +12,10 @@ Mensaje_Temp_Hum datos_SHT30;
 Tiempo_Fecha datos_horarios;
 Mensaje_Iluminacion datos_luz;
 
+// Cambiarlo a variable statica
+uint8_t encender_vent = 0;
+
+
 extern osMessageQueueId_t mid_MsgPIR;
 extern osMessageQueueId_t mid_MsgRTC;
 extern osMessageQueueId_t mid_MsgLCD;
@@ -30,6 +34,8 @@ Aqui hay que incluir la cola de mensajes del mando, sensor sismico, LDR, etc.
 void ThPrincipal (void *argument); 
 
 int Init_ThPrincipal (void) {
+	osThreadAttr_t prueba;
+	prueba.stack_size = 3840;
 	
   tid_ThPrincipal = osThreadNew(ThPrincipal, NULL, NULL);
   if (tid_ThPrincipal == NULL) {
@@ -77,7 +83,7 @@ void ThPrincipal (void *argument) {
 	uint8_t encender_luces = 0;
 	uint8_t porcentaje = 0;
 	uint8_t modo = 0;
-	uint8_t encender_ventilador = 0, encender_ventilador_anterior = 0;
+	uint8_t encender_vent_anterior = 0;
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -115,13 +121,13 @@ void ThPrincipal (void *argument) {
 		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
 		//---------------------------------------------------------------------------------------------------------------------------
 
-		encender_ventilador = (umbralTemp < datos_SHT30.temperatura) ? 0 : 1;
+		encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;
 		
-		if(encender_ventilador != encender_ventilador_anterior){
-			osMessageQueuePut(mid_Msg_Ventilador_Temphum, &encender_ventilador, 0, 0);
+		if(encender_vent != encender_vent_anterior){
+			osMessageQueuePut(mid_Msg_Ventilador_Temphum, &encender_vent, 0, 0);
 		}
 		
-		encender_ventilador_anterior = encender_ventilador;
+		encender_vent_anterior = encender_vent;
 		
 		/* ---------------------------------------------------
 				Envio de mensajes a los modulos de salida

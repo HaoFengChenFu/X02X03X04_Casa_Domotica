@@ -158,27 +158,22 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>datos_luz,0x0A</ItemText>
+          <ItemText>datos_SHT30.temperatura</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>voltaje</ItemText>
+          <ItemText>umbralTemp,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>porcentaje_pulso,0x0A</ItemText>
+          <ItemText>encender</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>infoLuz,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>porcentaje</ItemText>
+          <ItemText>encender_vent</ItemText>
         </Ww>
       </WatchWindow1>
       <ScvdPack>
