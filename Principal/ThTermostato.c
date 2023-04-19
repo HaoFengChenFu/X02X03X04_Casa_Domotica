@@ -24,7 +24,7 @@ static void Callback_TimerServo (void *argument);
 static void Init_servo_Timer_periodic (void);
 
 osMessageQueueId_t mid_Msg_Ventilador_Temphum;//id cola que se comunicara con thread principal
-Mensaje_Temp_Hum_ventilador info_temp_Hum;
+uint8_t encender;
 
 static bool ventilador_encendido=false;//guardamos el estado del ventilador
 
@@ -44,13 +44,14 @@ void ThTermostato (void *argument) {
   Init_Ventilador_MsgTemp_Hum ();
 	init_servo();
   while (1) {	
-		osMessageQueueGet(mid_Msg_Ventilador_Temphum, &info_temp_Hum, 0, osWaitForever);
-		  if(info_temp_Hum.temperatura > UMBRAL && !ventilador_encendido){//comprobamos umbral
+		osMessageQueueGet(mid_Msg_Ventilador_Temphum, &encender, 0, osWaitForever);
+		  if(encender==1){//comprobamos umbral
 		    encender_ventilador();
-				move_servo();
-		  }else if(info_temp_Hum.temperatura <= UMBRAL && ventilador_encendido){
+				// -------------------------------------------------------------- POR DESCOMENTAR -------------------------------------------------------------
+				//move_servo();
+		  }else {
 			  apagar_ventilador();
-				stop_servo();	
+				//stop_servo();	
 		  }
   osThreadYield();                            // suspend thread
   }
@@ -100,7 +101,7 @@ void apagar_ventilador(void){
 int Init_Ventilador_MsgTemp_Hum (void)
 {
 	osStatus_t status;
-	mid_Msg_Ventilador_Temphum = osMessageQueueNew(4, sizeof(info_temp_Hum), NULL);
+	mid_Msg_Ventilador_Temphum = osMessageQueueNew(4, sizeof(uint8_t), NULL);
 	if (mid_Msg_Ventilador_Temphum != NULL){
 			if( status != osOK){
 				return -1;

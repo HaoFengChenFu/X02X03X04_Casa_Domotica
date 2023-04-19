@@ -16,7 +16,7 @@
 #include "Principal.h"
 
 char Time_Date[60];
-uint8_t umbralTemp;
+uint8_t umbralTemp = 25;
 
 extern Mensaje_Temp_Hum datos_SHT30;
 extern Tiempo_Fecha datos_horarios;

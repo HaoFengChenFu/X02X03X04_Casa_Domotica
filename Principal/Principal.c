@@ -22,6 +22,7 @@ extern osMessageQueueId_t mid_Msg_Ventilador_Temphum;
 extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgIluminacion;
 
+extern uint8_t umbralTemp;
 /*****
 Aqui hay que incluir la cola de mensajes del mando, sensor sismico, LDR, etc.
 *****/
@@ -64,7 +65,7 @@ void Init_All_Threads (void){
 	Init_ThLDR();
 	Init_ThIluminacion();
 	
-	//Init_ThThermostato();
+	Init_ThThermostato();
 
 }
 
@@ -76,6 +77,7 @@ void ThPrincipal (void *argument) {
 	uint8_t encender_luces = 0;
 	uint8_t porcentaje = 0;
 	uint8_t modo = 0;
+	uint8_t encender_ventilador = 0, encender_ventilador_anterior = 0;
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -112,8 +114,15 @@ void ThPrincipal (void *argument) {
 		//---------------------------------------------------------------------------------------------------------------------------
 		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
 		//---------------------------------------------------------------------------------------------------------------------------
-		
 
+		encender_ventilador = (umbralTemp < datos_SHT30.temperatura) ? 0 : 1;
+		
+		if(encender_ventilador != encender_ventilador_anterior){
+			osMessageQueuePut(mid_Msg_Ventilador_Temphum, &encender_ventilador, 0, 0);
+		}
+		
+		encender_ventilador_anterior = encender_ventilador;
+		
 		/* ---------------------------------------------------
 				Envio de mensajes a los modulos de salida
 		---------------------------------------------------- */

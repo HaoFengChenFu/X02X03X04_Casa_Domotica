@@ -10,12 +10,6 @@
 	#define PRESCALER_TIM3 210-1
 	#define PERIOD_TIM3 8000-1
 	
-	typedef struct
-	{
-		float temperatura;
-		float humedad;
-		
-	} Mensaje_Temp_Hum_ventilador;
 
 	int Init_ThThermostato (void);//init thread
   void init_ventilador(void);//inicializacion pin ventilador
