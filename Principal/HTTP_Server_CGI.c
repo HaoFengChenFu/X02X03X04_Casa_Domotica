@@ -170,6 +170,9 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
   netIF_Option opt = netIF_OptionMAC_Address;
   int16_t      typ = 0;
 
+	float temperatura;
+	
+	
   switch (env[0]) {
     // Analyze a 'c' script line starting position 2
     case 'a' :
@@ -285,25 +288,41 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 		case 'h':				// Refresco de la Humedad Relativa
           len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.humedad);
 			break;
-			
+		
+		case 'g':				// Refresco Temperatura "Temp.cgx"
+          len = (uint32_t)sprintf (buf, &env[1], datos_SHT30.humedad);
+			break;
 
-    case 'l':				// Refresco de la Luminosidad
+    case 'l':				// Luminosidad
           len = (uint32_t)sprintf (buf, &env[4], datos_luz.porcentaje_pulso);
       break;
 		
+    case 'm':				// Refresco de la Luminosidad
+          len = (uint32_t)sprintf (buf, &env[1], datos_luz.porcentaje_pulso);
+      break;
 		
-    case 'r':				// Refresco del RTC
-					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d  /  Fecha: %.2d-%.2d-%.4d ", 
+    case 'r':				//RTC
+					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ",
 					datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
 		
           len = (uint32_t)sprintf (buf, &env[4], Time_Date);
       break;
 		
+    case 's':				// Refresco del RTC
+					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ", 
+					datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
 		
-    case 't':				// Refresco de la Temperatura
+          len = (uint32_t)sprintf (buf, &env[1], Time_Date);
+      break;
+		
+    case 't':				// Temperatura
           len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.temperatura);
       break;
 
+		case 'u':				// Refresco Temperatura "Temp.cgx"
+			temperatura = datos_SHT30.temperatura;
+          len = (uint32_t)sprintf (buf, &env[1], temperatura);
+			break;
 
   }
   return (len);

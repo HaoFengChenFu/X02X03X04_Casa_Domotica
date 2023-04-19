@@ -1,7 +1,7 @@
 t <form>
 t <text>
-t <id>temp</id>
-c t <value>%5.3f ºC</value>
+t <id>temp_value</id>
+c u <value>%5.2f ºC</value>
 t </text>
 t </form>
 .

@@ -23,16 +23,16 @@ extern void ThTermostato (void *argument);                   // thread function
 static void Callback_TimerServo (void *argument);
 static void Init_servo_Timer_periodic (void);
 
-osMessageQueueId_t mid_Msg_Ventilador_Temphum;//id cola que se comunicara con thread principal
+osMessageQueueId_t mid_Msg_Ventilador;//id cola que se comunicara con thread principal
 uint8_t encender;
 
-static bool ventilador_encendido=false;//guardamos el estado del ventilador
-
-
+const osThreadAttr_t thread1_attr = {
+  .stack_size = 4608                           // Create the thread stack with a size of 1024 bytes
+};
  
 int Init_ThThermostato (void) {
  
-  tid_ThTermostato = osThreadNew(ThTermostato, NULL, NULL);
+  tid_ThTermostato = osThreadNew(ThTermostato, NULL, &thread1_attr);
   if (tid_ThTermostato == NULL) {
     return(-1);
   }
@@ -41,10 +41,10 @@ int Init_ThThermostato (void) {
 }
  
 void ThTermostato (void *argument) {
-  Init_Ventilador_MsgTemp_Hum ();
+  Init_Ventilador_Msg ();
 	init_servo();
   while (1) {	
-		osMessageQueueGet(mid_Msg_Ventilador_Temphum, &encender, 0, osWaitForever);
+		osMessageQueueGet(mid_Msg_Ventilador, &encender, 0, osWaitForever);
 		  if(encender==1){//comprobamos umbral
 		    encender_ventilador();
 				// -------------------------------------------------------------- POR DESCOMENTAR -------------------------------------------------------------
@@ -81,7 +81,7 @@ void init_ventilador(void){//PC6
  -----------------------------------------------------------------*/
 void encender_ventilador(void){
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_SET);
-	ventilador_encendido=true;
+
 }
 /*------------------------------------------------------------------
 				Apagar ventilador
@@ -89,7 +89,7 @@ void encender_ventilador(void){
 void apagar_ventilador(void){
 	
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, GPIO_PIN_RESET);
-	ventilador_encendido=false;
+
 	
 }
 
@@ -98,11 +98,11 @@ void apagar_ventilador(void){
         el thread principal donde se metera la informacion de la 
          temperatura y humedad
  -----------------------------------------------------------------*/
-int Init_Ventilador_MsgTemp_Hum (void)
+int Init_Ventilador_Msg (void)
 {
 	osStatus_t status;
-	mid_Msg_Ventilador_Temphum = osMessageQueueNew(4, sizeof(uint8_t), NULL);
-	if (mid_Msg_Ventilador_Temphum != NULL){
+	mid_Msg_Ventilador= osMessageQueueNew(4, sizeof(uint8_t), NULL);
+	if (mid_Msg_Ventilador != NULL){
 			if( status != osOK){
 				return -1;
 			}
