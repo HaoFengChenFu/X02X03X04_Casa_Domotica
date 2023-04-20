@@ -69,7 +69,6 @@
 	     }
 	     else
 	     {
-	       /* Error occurred while writing data in Flash memory*/
 	    	 printf("Error al escribir en la memoria flash");
 	     }
 	   }	

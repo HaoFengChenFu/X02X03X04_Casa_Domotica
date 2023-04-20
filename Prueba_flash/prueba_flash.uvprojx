@@ -389,16 +389,6 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>configuracion.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\configuracion.c</FilePath>
-            </File>
-            <File>
-              <FileName>configuracion.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\configuracion.h</FilePath>
-            </File>
-            <File>
               <FileName>flashLib.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\flashLib.c</FilePath>

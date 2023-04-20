@@ -39,7 +39,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "configuracion.h"
 #include "flashLib.h"
 
 
@@ -121,7 +120,7 @@ int main(void)
 
 	//PRUEBA FLASH 1 
   
-	uint32_t data1[] = {0x123,0x2434,0x3445,0x478,0x58,0x6844,0x78,0x8448,0x4498};
+	uint32_t data1[] = {0x123,0x2434,0x3445,0x4787,0x58,0x6844,0x78,0x8448,0x4498};
 	escritura_flash(FLASH_SECTOR_9 ,1, 9 , 0x080A0100 , data1);
 	buffer_lectura = lectura_flash(0x080A0100, 9);
 	
@@ -131,7 +130,7 @@ int main(void)
 	
 	//PRUEBA FLASH 2 (probamos a escribir un string en la flash y a leerlo)
 	
-	char * data2 = "prueba escritura 2\n";
+	char * data2 = "prueba escritura string\n";
 	char* buffer_rx;//buffer donde almacenamos los datos leidos 
 	int numero_palabras= num_palabras_string(data2);
 	
