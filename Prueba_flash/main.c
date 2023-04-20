@@ -118,31 +118,26 @@ int main(void)
 
   /* Add your application code here
      */
-	//INICIALIZACIÓN DE COMPONENTES
-	configuracion();//init leds de unsuario
+
+	//PRUEBA FLASH 1 
   
-	
-	//PRUEBA FLASH 1
-  
-	uint32_t data1[] = {0x12,0x23,0x35,0x47,0x58,0x68,0x78,0x88,0x98};
-	escritura_flash(FLASH_SECTOR_9 ,1,FLASH_VOLTAGE_RANGE_3, 9 , 0x080A0100 , data1);
+	uint32_t data1[] = {0x123,0x2434,0x3445,0x478,0x58,0x6844,0x78,0x8448,0x4498};
+	escritura_flash(FLASH_SECTOR_9 ,1, 9 , 0x080A0100 , data1);
 	buffer_lectura = lectura_flash(0x080A0100, 9);
 	
 	for(int i=0;i<9;i++){
-	printf("dato leido: %08X\n", buffer_lectura[i]);
+	printf("dato leido %d : %08X\n", i, buffer_lectura[i]);
 	}
 	
-	//PRUEBA FLASH 2 (NO FUNCIONA TODAVIA ESTA PRUEBA)
-	/*
-	char * data2 = "prueba escritura\n";
-	int numero_palabras= num_palabras(data2);
-	escritura_flash(FLASH_SECTOR_8 ,1,FLASH_VOLTAGE_RANGE_3, numero_palabras , 0x08080100 , (uint32_t*)data2);
-	buffer_lectura = lectura_flash(0x08080100, numero_palabras );
-	char* buffer_rx;
-	conversion_string(buffer_lectura,buffer_rx);
-	printf("%s ", buffer_rx);
-	*/
+	//PRUEBA FLASH 2 (probamos a escribir un string en la flash y a leerlo)
 	
+	char * data2 = "prueba escritura 2\n";
+	char* buffer_rx;//buffer donde almacenamos los datos leidos 
+	int numero_palabras= num_palabras_string(data2);
+	
+	escritura_flash_string_format(FLASH_SECTOR_8 ,1, 0x08080100 , data2);//guardamos string guardado en la variable data2 a partir de 0x08080100 
+	buffer_rx = lectura_flash_string_format(0x08080100, numero_palabras );
+	printf(" string leido: %s", buffer_rx);
 	
 
 #ifdef RTE_CMSIS_RTOS2
