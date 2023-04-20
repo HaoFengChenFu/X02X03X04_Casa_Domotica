@@ -15,14 +15,14 @@
 
 #include "Principal.h"
 
-char Time_Date[60];
+char Time_Date[60], prueba[30];
 uint8_t umbralTemp = 25;
 
 extern Mensaje_Temp_Hum datos_SHT30;
 extern Tiempo_Fecha datos_horarios;
 extern Mensaje_Iluminacion datos_luz;
 
-
+extern uint8_t vent_forzado, luz_forzada;
 
 
 
@@ -134,19 +134,23 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
 
       if (strcmp (var, "LumHab=1") == 0) {
         // Encender el ventilador
-				printf("Encendido forzado de las luces Falta asignar el codigo\n");
+				printf("Encendido forzado de las luces\n");
+				luz_forzada = 1;
       }
 			else if (strcmp (var, "LumHab=0") == 0){
 				// Apagar el ventilador
-				printf("Apagado forzado de las luces Falta asignar el codigo\n");
+				printf("Apagado forzado de las luces\n");
+				luz_forzada = 0;
 			}
       else if (strcmp (var, "VentHab=1") == 0) {
         // Encender el ventilador
-				printf("Encendido forzado del ventilador Falta asignar el codigo\n");
+				printf("Encendido forzado del ventilador\n");
+				vent_forzado = 1;
       }
 			else if (strcmp (var, "VentHab=0") == 0){
 				// Apagar el ventilador
-				printf("Apagado forzado del ventilador: Falta asignar el codigo\n");
+				printf("Apagado forzado del ventilador\n");
+				vent_forzado = 0;
 			}
       else if (strncmp (var, "UmbralTemp=", strlen("UmbralTemp=")) == 0) {
 				
@@ -170,9 +174,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
   netIF_Option opt = netIF_OptionMAC_Address;
   int16_t      typ = 0;
 
-	float temperatura;
-	
-	
   switch (env[0]) {
     // Analyze a 'c' script line starting position 2
     case 'a' :
@@ -286,19 +287,23 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 		
 		case 'h':				// Refresco de la Humedad Relativa
-          len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.humedad);
+					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+          len = (uint32_t)sprintf (buf, &env[4], prueba);
 			break;
 		
-		case 'g':				// Refresco Temperatura "Temp.cgx"
-          len = (uint32_t)sprintf (buf, &env[1], datos_SHT30.humedad);
+		case 'g':				// Refresco Humedad "Humedad.cgx"
+					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+          len = (uint32_t)sprintf (buf, &env[1], prueba);
 			break;
 
     case 'l':				// Luminosidad
-          len = (uint32_t)sprintf (buf, &env[4], datos_luz.porcentaje_pulso);
+					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
+          len = (uint32_t)sprintf (buf, &env[4], prueba);
       break;
 		
     case 'm':				// Refresco de la Luminosidad
-          len = (uint32_t)sprintf (buf, &env[1], datos_luz.porcentaje_pulso);
+					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
+          len = (uint32_t)sprintf (buf, &env[1], prueba);
       break;
 		
     case 'r':				//RTC
@@ -316,12 +321,13 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 		
     case 't':				// Temperatura
-          len = (uint32_t)sprintf (buf, &env[4], datos_SHT30.temperatura);
+					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+          len = (uint32_t)sprintf (buf, &env[4], prueba);
       break;
 
 		case 'u':				// Refresco Temperatura "Temp.cgx"
-			temperatura = datos_SHT30.temperatura;
-          len = (uint32_t)sprintf (buf, &env[1], temperatura);
+					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+          len = (uint32_t)sprintf (buf, &env[1], prueba);
 			break;
 
   }

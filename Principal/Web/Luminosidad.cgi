@@ -33,7 +33,7 @@ t <tr bgcolor=#FFF52D>
 t  <th width=30%>Luminosidad</th>
 t <tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
-c l 2 size="60" id="lum" value="%5.3f "></td>
+c l 1 size="60" id="lum" value="%s "></td>
 t </font></table>
 t <p align=center>
 t <input type=button value="Actualizar Luminosidad" onclick="updateMultiple(updateLux,updateValueLux)">

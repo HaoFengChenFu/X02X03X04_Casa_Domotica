@@ -623,6 +623,11 @@
               <FileType>9</FileType>
               <FilePath>.\Web\Luminosidad.cgi</FilePath>
             </File>
+            <File>
+              <FileName>Luminosidad.cgx</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Luminosidad.cgx</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1268,6 +1273,11 @@
               <FileName>Luminosidad.cgi</FileName>
               <FileType>9</FileType>
               <FilePath>.\Web\Luminosidad.cgi</FilePath>
+            </File>
+            <File>
+              <FileName>Luminosidad.cgx</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Luminosidad.cgx</FilePath>
             </File>
           </Files>
         </Group>

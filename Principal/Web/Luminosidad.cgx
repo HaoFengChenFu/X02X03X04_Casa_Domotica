@@ -1,6 +1,6 @@
 t <form>
 t <text>
-t <id>temp_value</id>
+t <id>lum</id>
 c u <value>%s</value>
 t </text>
 t </form>

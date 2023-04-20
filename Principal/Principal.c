@@ -14,7 +14,7 @@ Mensaje_Iluminacion datos_luz;
 
 // Cambiarlo a variable statica
 uint8_t encender_vent = 0;
-
+uint8_t vent_forzado, luz_forzada;
 
 extern osMessageQueueId_t mid_MsgPIR;
 extern osMessageQueueId_t mid_MsgRTC;

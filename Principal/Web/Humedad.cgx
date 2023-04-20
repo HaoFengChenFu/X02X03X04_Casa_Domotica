@@ -1,7 +1,7 @@
 t <form>
 t <text>
 t <id>valor_humedad</id>
-c g <value>%5.2f %%</value>
+c g <value>%s%</value>
 t </text>
 t </form>
 .

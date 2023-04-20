@@ -1,4 +1,3 @@
-# Version Funcional Temperatura
 t <html><head><title>Control de Temperatura</title>
 t <script language=JavaScript type="text/javascript" src="xml_http.js"></script>
 t <script language=JavaScript type="text/javascript">
@@ -27,7 +26,7 @@ t  <th width=100%>Temperatura</th>
 t <tr>
 # Here begin data setting which is formatted in HTTP_CGI.C module
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
-c t size="27" id="temp_value" value="%5.2f ºC"></td></tr>
+c t 1 size="27" id="temp_value" value="%s"></td></tr>
 t </font></table>
 t <p align=center>
 t <input type=button value="Refresh" onclick="updateMultiple(tempUpdate,updateValueTemp)">
