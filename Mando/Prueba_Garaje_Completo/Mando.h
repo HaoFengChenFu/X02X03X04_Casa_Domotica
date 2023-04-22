@@ -17,5 +17,5 @@ int Init_ThMando  (void);
 void	Init_Mando_Pin(void);
 static void Callback_TimerRebotes (void *argument);
 int Init_ThRebotes (void);
-	
+int Init_MsgQueue_Mando(void);	
 #endif
