@@ -4,7 +4,7 @@ t <script language=JavaScript type="text/javascript">
 # Define URL and refresh timeout
 t var LuxUpdate = new periodicObj("Luminosidad.cgx", 1000);
 t function updateValueLux() {
-t  LuxVal = document.getElementById("lum").value;
+t  LuxVal = document.getElementById("valor_lum").value;
 t }
 t function periodicUpdateLux() {
 t  if(document.getElementById("adChkBox").checked == true) {
@@ -33,7 +33,7 @@ t <tr bgcolor=#FFF52D>
 t  <th width=30%>Luminosidad</th>
 t <tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
-c l 1 size="60" id="lum" value="%s "></td>
+c l 1 size="60" id="valor_lum" value="%s "></td>
 t </font></table>
 t <p align=center>
 t <input type=button value="Actualizar Luminosidad" onclick="updateMultiple(updateLux,updateValueLux)">

@@ -1,7 +1,7 @@
 t <form>
 t <text>
-t <id>lum</id>
-c s <value>%s</value>
+t <id>valor_lum</id>
+c s<value>%s</value>
 t </text>
 t </form>
 .
