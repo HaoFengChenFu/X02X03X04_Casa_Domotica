@@ -44,7 +44,7 @@
 #include "adc.h"
 #include "Mando.h"
 #include "PuertaGaraje.h"
-
+#include "Test.h"
 #ifdef _RTE_
 #include "RTE_Components.h"             // Component selection
 #endif
@@ -119,24 +119,24 @@ int main(void)
      */
 	//INICIALIZACIÓN DE COMPONENTES
 	configuracion();//init leds de unsuario
-	Init_PWM_Pin();//init PWM
 	ADC1_pins_F429ZI_config();//init ADC
 	Init_Mando_Pin();
-  init_servo();
-	init_PWM();
+  
+
+Init_PWM_Garaje();
+
+
 	
 
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */
   osKernelInitialize ();
-	Init_ThMando();
 	Init_ThGaraje();
 	Init_ThRebotes();
+	Init_Thread();
   /* Create thread functions that start executing, 
   Example: osThreadNew(app_main, NULL, NULL); */
-   int status=0;
-	 
-	 status|=Init_ThPWM();
+
  
   /* Start thread execution */
   osKernelStart();

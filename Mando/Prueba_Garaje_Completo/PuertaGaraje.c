@@ -6,27 +6,24 @@
  *      Hilo donde se gestiona el control del ventilador en funcion de 
  *      la temperatura del ambiente.
  *---------------------------------------------------------------------------*/
-  static bool on_off=true;//puerta cerrada tras un reset del sistema
-	static bool first_time=true;//puerta cerrada tras un reset del sistema
-  int cnt_pulsaciones=0;
- static int pulso=400;//pulso del PWM del servomotor
- volatile static bool servo_sentido_horario=false;//servo moviendose hacia la izquierda
- 
- osThreadId_t tid_ThGaraje;                        // thread id
+ uint8_t on_off_garaje=NULL;
 
+ volatile static bool servo_sentido_descenso=false;//servo moviendose hacia la izquierda
+ uint16_t pulso;
+ osThreadId_t tid_ThGaraje;                        // thread id
+osMessageQueueId_t mid_MsgGaraje;
 osTimerId_t periodic_id;                              //timer periodic id
 osTimerId_t id_time_out;
 
-static TIM_HandleTypeDef htim3;
-static TIM_OC_InitTypeDef Channel_Tim3_Config;
+static TIM_HandleTypeDef htim4;
+static TIM_OC_InitTypeDef Channel_Tim4_Config;
 static GPIO_InitTypeDef GPIO_InitStruct;
 
- static void Init_servo_TimeOut (void);
+static void Init_servo_TimeOut (void);
 extern void ThGaraje (void *argument);                   // thread function
 static void Callback_TimerServo (void *argument);
 static void Init_servo_Timer_periodic (void);
 static void Callback_TimeOut(void *argument);
-static bool ventilador_encendido=false;//guardamos el estado del ventilador
 
 
  
@@ -40,32 +37,35 @@ int Init_ThGaraje (void) {
 }
  
 void ThGaraje (void *argument) {
-
-  while (1) {	
-  osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
+	 Init_MsgQueue_Garaje();
 	 Init_servo_TimeOut();
-		cnt_pulsaciones++;
-	if(!on_off)
-		on_off=true;
-	else if(on_off){
-		on_off=false;
-		osTimerStop(id_time_out);
+  while (1) {	
+		osMessageQueueGet(mid_MsgGaraje, &on_off_garaje,0,osWaitForever);
+   //osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
+
+
+
+		if(on_off_garaje != NULL)
+			move_servo();
+  
+		osThreadYield();                            // suspend thread
+  
 	}
-	if(first_time)
-		on_off=true;
-	if(first_time)	
-		first_time=!first_time;
-	 if(on_off==1){
-	servo_sentido_horario=true;
-	}
-	else
-	servo_sentido_horario=false;
-	move_servo();
-  osThreadYield();                            // suspend thread
-  }
 }
 
 
+int Init_MsgQueue_Garaje(void)
+{
+	osStatus_t status;
+	mid_MsgGaraje = osMessageQueueNew(4, sizeof(uint8_t), NULL);
+	if (mid_MsgGaraje != NULL){
+		// status = osMessageQueueGet(mid_MsgQueue, &msg, NULL, osWaitForever);				// Usado para comprobar que funciona correctamente
+			if( status != osOK){
+				return -1;
+			}
+	}
+	return 0;
+}
 
 
 /*------------------------------------------------------------------
@@ -90,8 +90,8 @@ void stop_servo(void){
     osTimerStop(periodic_id);
   }
 	//paramos la señal PWM
-	HAL_TIM_PWM_DeInit(&htim3);
-	HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_1);
+	HAL_TIM_PWM_DeInit(&htim4);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
 }
 
 
@@ -106,21 +106,11 @@ void stop_servo(void){
         mover a -90º= ancho de 1 ms (pulse=400)
  -----------------------------------------------------------------*/
 
-void init_servo(void){//MODO PWM generamos una señal de 50 Hz
-	
-	__HAL_RCC_GPIOC_CLK_ENABLE();
-	__HAL_RCC_TIM3_CLK_ENABLE();
-  
-  GPIO_InitStruct.Pin = GPIO_PIN_6;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;		
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-	
-}
+
+
 static void Init_servo_TimeOut (void)  {
-	 uint32_t exec1=1U;// argument for the timer call back
+	 uint32_t exec1=27U;// argument for the timer call back
  id_time_out = osTimerNew(Callback_TimeOut, osTimerOnce,&exec1, NULL); // 
 if (id_time_out != NULL) {
     // One-shoot timer created
@@ -128,8 +118,10 @@ if (id_time_out != NULL) {
 		printf("timer del servo no ha sido creado correctamente");
 	}
 }
+
+
 static void Callback_TimeOut(void *argument){
-servo_sentido_horario=true;
+servo_sentido_descenso=true;
 move_servo();
 }
 
@@ -150,22 +142,52 @@ if (periodic_id != NULL) {
 		printf("timer del servo no ha sido creado correctamente");
 	}
 }
-void init_PWM(void){
-	htim3.Instance = TIM3;				 // Este timer usa 84 MHz
-  htim3.Init.Prescaler = PRESCALER_TIM3;   //El prescaler del timer (éste) es interno del timer
-  htim3.Init.Period = PERIOD_TIM3;
-	htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-	htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-	HAL_TIM_PWM_Init(&htim3);
-	
-  Channel_Tim3_Config.OCMode = TIM_OCMODE_PWM1;
-	Channel_Tim3_Config.Pulse = pulso; //control de servomotor en funcion del ancho del pulso
-	Channel_Tim3_Config.OCPolarity =TIM_OCPOLARITY_HIGH;
-	Channel_Tim3_Config.OCFastMode = TIM_OCFAST_DISABLE;
-  
-	HAL_TIM_PWM_ConfigChannel(&htim3, &Channel_Tim3_Config, TIM_CHANNEL_1);
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 
+void Init_PWM_Garaje(void)
+{
+   __HAL_RCC_GPIOD_CLK_ENABLE();
+  
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Alternate = GPIO_AF2_TIM4;		// Pagina 79, en la primea fila de la columna 4 indica que es AF2
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  __HAL_RCC_TIM4_CLK_ENABLE();
+  htim4.Instance = TIM4;				 // Este timer usa 84 MHz
+  htim4.Init.Prescaler = PRESCALER_TIM4;   //El prescaler del timer (éste) es interno del timer
+  htim4.Init.Period = PERIOD_TIM4;
+	htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+	htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+	HAL_TIM_PWM_Init(&htim4);
+	
+  Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;
+	Channel_Tim4_Config.Pulse = 400;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
+	Channel_Tim4_Config.OCPolarity =TIM_OCPOLARITY_HIGH;
+	Channel_Tim4_Config.OCFastMode = TIM_OCFAST_DISABLE;
+  
+	HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_2);
+}
+
+/*---------------------------------------------------------------------------------------------------------
+				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
+ --------------------------------------------------------------------------------------------------------*/
+
+void Config_PWM_Pulse(uint8_t pulse)
+{
+	HAL_TIM_PWM_DeInit(&htim4);
+	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
+	htim4.Instance = TIM4;
+	htim4.Init.Prescaler = PRESCALER_TIM4;
+	htim4.Init.Period = PERIOD_TIM4;
+	HAL_TIM_OC_Init(&htim4);
+	HAL_TIM_PWM_Init(&htim4);
+	
+	Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM2;
+	Channel_Tim4_Config.Pulse = pulso;		// Si queremos que no brille tanto cuando el volumen está al maximo se podria multiplicar por 100 o 50
+	HAL_TIM_PWM_ConfigChannel(&htim4, &Channel_Tim4_Config, TIM_CHANNEL_2);			// Es importante para configurar el canal
+	
+	HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
 }
 	
 
@@ -177,31 +199,34 @@ void init_PWM(void){
  -----------------------------------------------------------------*/
 static void Callback_TimerServo (void *argument) {
 	
-init_PWM();
-	/*
-	if(on_off==1){
-	servo_sentido_horario=true;
+
+
+	
+	if(on_off_garaje==1){
+	servo_sentido_descenso=false;
 	}
 	else
-	servo_sentido_horario=false;
-	*/
+	servo_sentido_descenso=true;
+	
 	if(pulso == 800){//cuando ha llegado a los 90º rotamos hacia el otro sentido
-		servo_sentido_horario=true;
+		servo_sentido_descenso=true;
 		stop_servo();
 		osTimerStart(id_time_out,5000);
 
 		
 	}else if(pulso == 400){
-		servo_sentido_horario=false;
+		servo_sentido_descenso=false;
 		stop_servo();
 	}
 	
-	if(servo_sentido_horario){
-		pulso--;
+	if(servo_sentido_descenso){
+		pulso--; //servo_bajando
 	}else{
-		pulso++;
+		pulso++; //servo subiendo
 	}
-  
+	
+	Config_PWM_Pulse(pulso);
+	
 }
 
 

@@ -389,16 +389,6 @@
               <FilePath>.\main.c</FilePath>
             </File>
             <File>
-              <FileName>PWM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\PWM.c</FilePath>
-            </File>
-            <File>
-              <FileName>PWM.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\PWM.h</FilePath>
-            </File>
-            <File>
               <FileName>configuracion.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\configuracion.c</FilePath>
@@ -437,6 +427,16 @@
               <FileName>PuertaGaraje.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\PuertaGaraje.h</FilePath>
+            </File>
+            <File>
+              <FileName>Test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Test.c</FilePath>
+            </File>
+            <File>
+              <FileName>Test.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Test.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,14 +1,14 @@
 #include "Mando.h"
 #include "PuertaGaraje.h"
-extern osThreadId_t tid_ThGaraje;                        // thread id
+uint8_t on_off = 0;
 osThreadId_t tid_Rebotes; 
 static GPIO_InitTypeDef GPIO_InitStruct;
 osTimerId_t rebotes_id;  
 static void Init_Timer_Rebotes (void);
-
+int cnt_pulsaciones=0;
 	osThreadId_t tid_ThMando;
 
-
+osMessageQueueId_t mid_MsgMando;
 
 void Init_Mando_Pin(void)
 {
@@ -16,7 +16,7 @@ void Init_Mando_Pin(void)
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
   GPIO_InitStruct.Pin = GPIO_PIN_14;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
 }
@@ -36,12 +36,14 @@ int Init_ThMando  (void) {
   return(0);
 }
 void ThRebotes (void *argument){
-
+	
+Init_MsgQueue_Mando();
+Init_Timer_Rebotes();
 	while(1){
 	  //medida de luminosidad cada 1 segundo
     osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
-		Init_Timer_Rebotes();
-    osTimerStart(rebotes_id,50);
+		
+    osTimerStart(rebotes_id,100);
 	
 	 osThreadYield();                            // suspend thread
 	}
@@ -60,10 +62,35 @@ if (rebotes_id != NULL) {
 	}
 }
 static void Callback_TimerRebotes (void *argument) {
-
-osThreadFlagsSet(tid_ThGaraje,0x01);
+  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14) == GPIO_PIN_RESET){
+	cnt_pulsaciones++;
+		
+	if(on_off==0) 
+		 on_off=1;
+	else 
+		 on_off=0;
 	
+  osMessageQueuePut(mid_MsgMando, &on_off, 0, 0);
+	}
 }
+
+/*------------------------------------------------------------------------------
+										Iniciacion de la cola de mensajes
+-------------------------------------------------------------------------------*/
+
+int Init_MsgQueue_Mando(void)
+{
+	osStatus_t status;
+	mid_MsgMando = osMessageQueueNew(4, sizeof(uint8_t), NULL);
+	if (mid_MsgMando != NULL){
+		// status = osMessageQueueGet(mid_MsgQueue, &msg, NULL, osWaitForever);				// Usado para comprobar que funciona correctamente
+			if( status != osOK){
+				return -1;
+			}
+	}
+	return 0;
+}
+
 int Init_ThRebotes (void) {
  
   tid_Rebotes = osThreadNew(ThRebotes, NULL, NULL);
@@ -73,18 +100,6 @@ int Init_ThRebotes (void) {
 
   return(0);
 }
-void ThMando (void *argument){
-
-	while(1){
-	  //medida de luminosidad cada 1 segundo
-    osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-	
-	 osThreadYield();                            // suspend thread
-	}
-  
-}
-
 
 void EXTI15_10_IRQHandler(void){
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
@@ -92,13 +107,8 @@ void EXTI15_10_IRQHandler(void){
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 	if(GPIO_PIN_14 == GPIO_PIN){
-		if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14) == GPIO_PIN_RESET){
-        HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
-			  osThreadFlagsSet(tid_Rebotes,0x01);
-		}
-    else
-            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_RESET);
 
-		
+			  osThreadFlagsSet(tid_Rebotes,0x01);
+
+    }
 	}
-}
