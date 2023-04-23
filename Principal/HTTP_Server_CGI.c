@@ -17,6 +17,11 @@
 
 char Time_Date[60], prueba[30];
 uint8_t umbralTemp = 25;
+/*
+	num_pag_web es importante, por alguna razón el cgx debe apuntar solamente a uno de los cases. Por eso, cuando entramos en una pagina 
+	se va a indicar donde está y el refresco funcionará en función de la página
+*/
+uint8_t num_pag_web;				// 0: Humedad			1: Luminosidad			2: RTC			3: Temperatura
 
 extern Mensaje_Temp_Hum datos_SHT30;
 extern Tiempo_Fecha datos_horarios;
@@ -286,49 +291,75 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       len |= (1u << 31);
       break;
 		
-		case 'h':				// Refresco de la Humedad Relativa
+		case 'h':				// Humedad Relativa
 					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
+					num_pag_web = 0;
 			break;
 		
-		case 'g':				// Refresco Humedad "Humedad.cgx"
-					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
-          len = (uint32_t)sprintf (buf, &env[1], prueba);
-			break;
+//		case 'g':				// Refresco Humedad "Humedad.cgx"
+//					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+//          len = (uint32_t)sprintf (buf, &env[1], prueba);
+//			break;
 
     case 'l':				// Luminosidad
 					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
+					num_pag_web = 1;
       break;
 		
-    case 'm':				// Refresco de la Luminosidad
-					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
-          len = (uint32_t)sprintf (buf, &env[1], prueba);
-      break;
+//    case 'm':				// Refresco de la Luminosidad
+//					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
+//          len = (uint32_t)sprintf (buf, &env[1], prueba);
+//      break;
 		
     case 'r':				//RTC
 					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ",
 					datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
 		
           len = (uint32_t)sprintf (buf, &env[4], Time_Date);
+					num_pag_web = 2;
       break;
 		
     case 's':				// Refresco del RTC
-					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ", 
-					datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
+				switch(num_pag_web){
+					case 0:
+							sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+							len = (uint32_t)sprintf (buf, &env[1], prueba);
+					break;
+					
+					case 1:
+							sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
+							len = (uint32_t)sprintf (buf, &env[1], prueba);
+					break;
+					
+					case 2:
+							sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ", 
+							datos_horarios.horas, datos_horarios.minutos, datos_horarios.segundos, datos_horarios.dia, datos_horarios.mes, datos_horarios.anno+2000);
 		
-          len = (uint32_t)sprintf (buf, &env[1], Time_Date);
+							len = (uint32_t)sprintf (buf, &env[1], Time_Date);
+					break;
+					
+					case 3:
+							sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+							len = (uint32_t)sprintf (buf, &env[1], prueba);
+					break;
+					
+					
+				}
+
       break;
 		
     case 't':				// Temperatura
 					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
+					num_pag_web = 3;
       break;
 
-		case 'u':				// Refresco Temperatura "Temp.cgx"
-					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
-          len = (uint32_t)sprintf (buf, &env[1], prueba);
-			break;
+//		case 'u':				// Refresco Temperatura "Temp.cgx"
+//					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+//          len = (uint32_t)sprintf (buf, &env[1], prueba);
+//			break;
 
   }
   return (len);
