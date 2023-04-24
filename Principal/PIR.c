@@ -3,7 +3,7 @@
 osThreadId_t tid_ThPIR;
 
 /*------------------------------------------------------------------
-            Variables del timer virtual
+            Variables del timer virtual y cola de mensajes
  -----------------------------------------------------------------*/
 static osTimerId_t timer_PIR;
 static uint32_t exec;

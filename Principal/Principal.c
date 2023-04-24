@@ -16,15 +16,25 @@ Mensaje_Iluminacion datos_luz;
 uint8_t encender_vent = 0;
 uint8_t vent_forzado, luz_forzada;
 
+/*---------------------------------
+  	Cola de mensajes de entrada
+ *---------------------------------*/
 extern osMessageQueueId_t mid_MsgPIR;
 extern osMessageQueueId_t mid_MsgRTC;
-extern osMessageQueueId_t mid_MsgLCD;
+extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
 extern osMessageQueueId_t mid_MsgPulsador;
+extern osMessageQueueId_t mid_MsgMando;
 
+/*---------------------------------
+  	Cola de mensajes de salida
+ *---------------------------------*/
 extern osMessageQueueId_t mid_Msg_Ventilador;
 extern osMessageQueueId_t mid_MsgLDR;
+extern osMessageQueueId_t mid_MsgLCD;
 extern osMessageQueueId_t mid_MsgIluminacion;
+
+// ------------------------------------------------- INCLUIR LA COLA DEL GARAJE --------------------------------------------------------------
 
 extern uint8_t umbralTemp;
 /*****
@@ -51,6 +61,7 @@ void Init_All_Pins(void){
 	Init_Pin_Pulsador();
 	Init_PIR_Pin();
 	Init_PWM_Pin();
+	Init_Mando_Pin();
 	//init_servo();
 	//init_ventilador();
 }
@@ -69,7 +80,7 @@ void Init_All_Threads (void){
 	Init_ThLDR();
 	// El siguiente hilo no se crea,  por que ???
 	Init_ThIluminacion();
-	
+	Init_ThMando();
 
 
 }
@@ -83,6 +94,7 @@ void ThPrincipal (void *argument) {
 	uint8_t porcentaje = 0;
 	uint8_t modo = 0;
 	uint8_t encender_vent_anterior = 0;
+	uint8_t on_off_garaje = 0;
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -94,6 +106,7 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
+		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
 		
 		/* ---------------------------------------------------------------------
 			 Asignacion de valores para enviar mensajes a los módulos de salida
@@ -125,6 +138,9 @@ void ThPrincipal (void *argument) {
 		if(encender_vent != encender_vent_anterior){
 			osMessageQueuePut(mid_Msg_Ventilador, &encender_vent, 0, 0);
 		}
+		
+		// ------------------------------------------------- GESTIONAR LA COLA DEL GARAJE --------------------------------------------------------------
+		//osMessageQueuePut(
 		
 		encender_vent_anterior = encender_vent;
 		

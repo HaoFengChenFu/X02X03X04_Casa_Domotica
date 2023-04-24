@@ -153,45 +153,17 @@
           <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint>
-        <Bp>
-          <Number>0</Number>
-          <Type>0</Type>
-          <LineNumber>140</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134220558</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>.\HTTP_Server_CGI.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\HTTP_Server\HTTP_Server_CGI.c\140</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>135</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>.\HTTP_Server_CGI.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-      </Breakpoint>
+      <Breakpoint/>
       <WatchWindow1>
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
           <ItemText>var</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>porcentaje_pulso,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <ScvdPack>
@@ -811,17 +783,65 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>30</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Mando.c</PathWithFileName>
+      <FilenameWithoutPath>Mando.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>31</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\Mando.h</PathWithFileName>
+      <FilenameWithoutPath>Mando.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>32</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\PuertaGaraje.c</PathWithFileName>
+      <FilenameWithoutPath>PuertaGaraje.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>1</GroupNumber>
+      <FileNumber>33</FileNumber>
+      <FileType>5</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>.\PuertaGaraje.h</PathWithFileName>
+      <FilenameWithoutPath>PuertaGaraje.h</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
     <GroupName>Web files</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>30</FileNumber>
+      <FileNumber>34</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -833,7 +853,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>31</FileNumber>
+      <FileNumber>35</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -845,7 +865,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>32</FileNumber>
+      <FileNumber>36</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -857,7 +877,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>33</FileNumber>
+      <FileNumber>37</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -869,7 +889,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>34</FileNumber>
+      <FileNumber>38</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -881,7 +901,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>35</FileNumber>
+      <FileNumber>39</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -893,7 +913,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>36</FileNumber>
+      <FileNumber>40</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -905,7 +925,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>37</FileNumber>
+      <FileNumber>41</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -917,7 +937,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>38</FileNumber>
+      <FileNumber>42</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -929,7 +949,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>39</FileNumber>
+      <FileNumber>43</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -941,7 +961,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>40</FileNumber>
+      <FileNumber>44</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -953,7 +973,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>41</FileNumber>
+      <FileNumber>45</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -965,7 +985,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>42</FileNumber>
+      <FileNumber>46</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -977,7 +997,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>43</FileNumber>
+      <FileNumber>47</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -989,7 +1009,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>44</FileNumber>
+      <FileNumber>48</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1001,7 +1021,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>45</FileNumber>
+      <FileNumber>49</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1013,7 +1033,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>46</FileNumber>
+      <FileNumber>50</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1025,7 +1045,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>47</FileNumber>
+      <FileNumber>51</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1037,7 +1057,7 @@
     </File>
     <File>
       <GroupNumber>2</GroupNumber>
-      <FileNumber>48</FileNumber>
+      <FileNumber>52</FileNumber>
       <FileType>9</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1051,13 +1071,13 @@
 
   <Group>
     <GroupName>Documentation</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>3</GroupNumber>
-      <FileNumber>49</FileNumber>
+      <FileNumber>53</FileNumber>
       <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

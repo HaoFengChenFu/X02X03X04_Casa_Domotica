@@ -528,6 +528,26 @@
               <FileType>1</FileType>
               <FilePath>.\Iluminacion.c</FilePath>
             </File>
+            <File>
+              <FileName>Mando.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Mando.c</FilePath>
+            </File>
+            <File>
+              <FileName>Mando.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Mando.h</FilePath>
+            </File>
+            <File>
+              <FileName>PuertaGaraje.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PuertaGaraje.c</FilePath>
+            </File>
+            <File>
+              <FileName>PuertaGaraje.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\PuertaGaraje.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1178,6 +1198,26 @@
               <FileName>Iluminacion.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Iluminacion.c</FilePath>
+            </File>
+            <File>
+              <FileName>Mando.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Mando.c</FilePath>
+            </File>
+            <File>
+              <FileName>Mando.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Mando.h</FilePath>
+            </File>
+            <File>
+              <FileName>PuertaGaraje.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\PuertaGaraje.c</FilePath>
+            </File>
+            <File>
+              <FileName>PuertaGaraje.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\PuertaGaraje.h</FilePath>
             </File>
           </Files>
         </Group>

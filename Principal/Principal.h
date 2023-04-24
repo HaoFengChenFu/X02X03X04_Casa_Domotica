@@ -14,6 +14,9 @@
 	#include "Iluminacion.h"
 	#include "LDR.h"
 	
+	#include "Mando.h"
+	#include "PuertaGaraje.h"
+	
 	typedef struct{
 		uint8_t horas;
 		uint8_t minutos;
