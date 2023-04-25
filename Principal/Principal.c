@@ -33,8 +33,8 @@ extern osMessageQueueId_t mid_Msg_Ventilador;
 extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgLCD;
 extern osMessageQueueId_t mid_MsgIluminacion;
+extern osMessageQueueId_t mid_MsgGaraje;
 
-// ------------------------------------------------- INCLUIR LA COLA DEL GARAJE --------------------------------------------------------------
 
 extern uint8_t umbralTemp;
 /*****
@@ -60,10 +60,11 @@ int Init_ThPrincipal (void) {
 void Init_All_Pins(void){
 	Init_Pin_Pulsador();
 	Init_PIR_Pin();
-	Init_PWM_Pin();
 	Init_Mando_Pin();
-	//init_servo();
-	//init_ventilador();
+	Init_PWM_Iluminacion_Pin();
+	Init_PWM_Garaje();
+	init_servo();
+	init_ventilador();
 }
 
 /*---------------------------------------
@@ -78,10 +79,10 @@ void Init_All_Threads (void){
 	Init_ThTemp_Hum();
 	Init_ThPIR();
 	Init_ThLDR();
-	// El siguiente hilo no se crea,  por que ???
+
 	Init_ThIluminacion();
 	Init_ThMando();
-
+	Init_ThGaraje();
 
 }
 
@@ -140,7 +141,7 @@ void ThPrincipal (void *argument) {
 		}
 		
 		// ------------------------------------------------- GESTIONAR LA COLA DEL GARAJE --------------------------------------------------------------
-		//osMessageQueuePut(
+		osMessageQueuePut(mid_MsgGaraje, &on_off_garaje, 0, 0);
 		
 		encender_vent_anterior = encender_vent;
 		

@@ -101,7 +101,7 @@ void ThMando (void *argument){
 
     osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
 		
-    osTimerStart(rebotes_id,100);
+    osTimerStart(rebotes_id,50);
 	
 		osThreadYield(); 
 	}

@@ -11,13 +11,12 @@
 	#define PERIOD_TIM4 8000-1
 	
 	
-	void move_servo(void);
-	void stop_servo(void);
-	void init_servo(void);
+	void mover_Puerta_Garaje(void);
+	void parar_Puerta_Garaje(void);
 	int Init_ThGaraje (void);
 	void Init_PWM_Garaje(void);
   int Init_MsgQueue_Garaje(void);	
-	
+	void Config_PWM_Pulse_Garaje(uint8_t pulse);
 	
 	
 #endif

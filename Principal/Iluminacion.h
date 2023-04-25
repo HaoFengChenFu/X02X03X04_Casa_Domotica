@@ -19,7 +19,7 @@
 		
 	} Mensaje_Iluminacion;
 	
-	void Init_PWM_Pin(void);
+	void Init_PWM_Iluminacion_Pin(void);
 	void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado);
 	int Init_ThIluminacion (void);
 	

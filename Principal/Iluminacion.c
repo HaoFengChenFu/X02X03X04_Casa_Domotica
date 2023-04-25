@@ -32,7 +32,7 @@ int Init_ThIluminacion(void) {
 /*------------------------------------------------------------------------------
 										Iniciacion de un timer con PWM
  -------------------------------------------------------------------------------*/
-void Init_PWM_Pin(void)
+void Init_PWM_Iluminacion_Pin(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
    __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -108,7 +108,7 @@ int Init_MsgIluminacion (void)
 				return -1;
 			}
 	}
-	Init_PWM_Pin();
+	Init_PWM_Iluminacion_Pin();
 	return 0;
 }
 
