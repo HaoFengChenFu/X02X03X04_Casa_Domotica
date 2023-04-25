@@ -6,6 +6,7 @@
  
 osThreadId_t tid_Thread;                        // thread id
 uint8_t on_off_test;
+uint8_t on_off_test2;
 
 extern osMessageQueueId_t mid_MsgMando;
 extern osMessageQueueId_t mid_MsgGaraje;
@@ -30,6 +31,8 @@ void Thread (void *argument) {
 		
 		osMessageQueueGet(mid_MsgMando, &on_off_test,0,osWaitForever);
 		osMessageQueuePut(mid_MsgGaraje, &on_off_test, 0, 0);
+		
+
 		/*
 		osMessageQueuePut(mid_MsgMando, &on_off, 0, 0);
 		osMessageQueueGet(mid_MsgPulsador, &modo, 0, 0);

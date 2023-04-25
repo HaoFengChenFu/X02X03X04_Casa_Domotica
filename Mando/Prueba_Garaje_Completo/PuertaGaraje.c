@@ -8,10 +8,11 @@
  *---------------------------------------------------------------------------*/
  uint8_t on_off_garaje=NULL;
 
- volatile static bool servo_sentido_descenso=false;//servo moviendose hacia la izquierda
- uint16_t pulso;
+ static bool time_out=false;
+ uint16_t pulso = 3100;
  osThreadId_t tid_ThGaraje;                        // thread id
 osMessageQueueId_t mid_MsgGaraje;
+
 osTimerId_t periodic_id;                              //timer periodic id
 osTimerId_t id_time_out;
 
@@ -39,13 +40,14 @@ int Init_ThGaraje (void) {
 void ThGaraje (void *argument) {
 	 Init_MsgQueue_Garaje();
 	 Init_servo_TimeOut();
+
+	 
   while (1) {	
 		osMessageQueueGet(mid_MsgGaraje, &on_off_garaje,0,osWaitForever);
-   //osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
 
 
 
-		if(on_off_garaje != NULL)
+
 			move_servo();
   
 		osThreadYield();                            // suspend thread
@@ -66,7 +68,6 @@ int Init_MsgQueue_Garaje(void)
 	}
 	return 0;
 }
-
 
 /*------------------------------------------------------------------
 				función para mover el servomotor que esta unido al 
@@ -121,8 +122,15 @@ if (id_time_out != NULL) {
 
 
 static void Callback_TimeOut(void *argument){
-servo_sentido_descenso=true;
-move_servo();
+  
+	if(time_out==true)
+		time_out=false;
+	else
+		time_out=true;
+	//on_off_garaje=0;
+	move_servo();
+
+
 }
 
 /*------------------------------------------------------------------
@@ -162,7 +170,7 @@ void Init_PWM_Garaje(void)
 	HAL_TIM_PWM_Init(&htim4);
 	
   Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;
-	Channel_Tim4_Config.Pulse = 400;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
+	Channel_Tim4_Config.Pulse = 3100;				// Cuando es un nivel bajo el led se ilumina y cuando es una nivel alto el led se apaga
 	Channel_Tim4_Config.OCPolarity =TIM_OCPOLARITY_HIGH;
 	Channel_Tim4_Config.OCFastMode = TIM_OCFAST_DISABLE;
   
@@ -173,7 +181,7 @@ void Init_PWM_Garaje(void)
 				Funcion para variar la intensidad del Led en funcion del pulso introducido como parametro
  --------------------------------------------------------------------------------------------------------*/
 
-void Config_PWM_Pulse(uint8_t pulse)
+void Config_PWM_Pulse_Garaje(uint8_t pulse)
 {
 	HAL_TIM_PWM_DeInit(&htim4);
 	HAL_TIM_PWM_Stop(&htim4, TIM_CHANNEL_2);
@@ -199,33 +207,27 @@ void Config_PWM_Pulse(uint8_t pulse)
  -----------------------------------------------------------------*/
 static void Callback_TimerServo (void *argument) {
 	
-
-
-	
-	if(on_off_garaje==1){
-	servo_sentido_descenso=false;
-	}
-	else
-	servo_sentido_descenso=true;
-	
-	if(pulso == 800){//cuando ha llegado a los 90º rotamos hacia el otro sentido
-		servo_sentido_descenso=true;
-		stop_servo();
-		osTimerStart(id_time_out,5000);
-
-		
-	}else if(pulso == 400){
-		servo_sentido_descenso=false;
-		stop_servo();
-	}
-	
-	if(servo_sentido_descenso){
+	if(on_off_garaje==0 && time_out==false){
 		pulso--; //servo_bajando
-	}else{
+	}else if(on_off_garaje==1 && time_out==false){
 		pulso++; //servo subiendo
+	}else if(on_off_garaje==0 && time_out==true){
+	  pulso++;
+	}else{
+	  pulso--;
+	}
+
+	
+	if(pulso==3100 || pulso == 3800){
+
+		stop_servo();
+		if(pulso==3800)
+			osTimerStart(id_time_out,5000);
+	
 	}
 	
-	Config_PWM_Pulse(pulso);
+	
+	Config_PWM_Pulse_Garaje(pulso);
 	
 }
 

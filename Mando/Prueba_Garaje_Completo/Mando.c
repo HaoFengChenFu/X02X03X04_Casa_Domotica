@@ -7,6 +7,7 @@ osTimerId_t rebotes_id;
 static void Init_Timer_Rebotes (void);
 int cnt_pulsaciones=0;
 	osThreadId_t tid_ThMando;
+extern osMessageQueueId_t mid_MsgGaraje;
 
 osMessageQueueId_t mid_MsgMando;
 
@@ -41,9 +42,12 @@ Init_MsgQueue_Mando();
 Init_Timer_Rebotes();
 	while(1){
 	  //medida de luminosidad cada 1 segundo
+   // osMessageQueueGet(mid_MsgMando, &on_off,0,osWaitForever);
+		//osMessageQueuePut(mid_MsgMando, &on_off, 0, 0);
+		
     osThreadFlagsWait(0x01,osFlagsWaitAny,osWaitForever);
 		
-    osTimerStart(rebotes_id,100);
+    osTimerStart(rebotes_id,50);
 	
 	 osThreadYield();                            // suspend thread
 	}
@@ -62,7 +66,7 @@ if (rebotes_id != NULL) {
 	}
 }
 static void Callback_TimerRebotes (void *argument) {
-  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14) == GPIO_PIN_RESET){
+ if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14) == GPIO_PIN_RESET){
 	cnt_pulsaciones++;
 		
 	if(on_off==0) 
@@ -71,7 +75,8 @@ static void Callback_TimerRebotes (void *argument) {
 		 on_off=0;
 	
   osMessageQueuePut(mid_MsgMando, &on_off, 0, 0);
-	}
+}
+
 }
 
 /*------------------------------------------------------------------------------

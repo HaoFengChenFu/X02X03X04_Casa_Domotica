@@ -17,7 +17,7 @@
 	int Init_ThGaraje (void);
 	void Init_PWM_Garaje(void);
   int Init_MsgQueue_Garaje(void);	
-	
+	void Config_PWM_Pulse_Garaje(uint8_t pulse);
 	
 	
 #endif
