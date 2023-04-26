@@ -14,7 +14,7 @@ Mensaje_Iluminacion datos_luz;
 
 // Cambiarlo a variable statica
 uint8_t encender_vent = 0;
-uint8_t vent_forzado, luz_forzada;
+uint8_t vent_forzado, luz_forzada, vent_mode;
 
 char* dataTemp, dataHum;
 uint8_t numPalabras;
@@ -111,17 +111,7 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
-		
-		
-		
-		sprintf(dataTemp, "t -> %.2f ºC", datos_SHT30.temperatura);
-		numPalabras = num_palabras_string(dataTemp);
-		
-		escritura_flash_string_format(FLASH_SECTOR_8, 1, 0x08080100, dataTemp);
-		
-		buffer = lectura_flash_string_format(0x08080100, (uint16_t)numPalabras);
-		
-		printf("\n\n\n %s \n\n\n", buffer);
+	
 		/* ---------------------------------------------------------------------
 			 Asignacion de valores para enviar mensajes a los módulos de salida
 		--------------------------------------------------------------------- */
@@ -146,23 +136,27 @@ void ThPrincipal (void *argument) {
 		//---------------------------------------------------------------------------------------------------------------------------
 		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
 		//---------------------------------------------------------------------------------------------------------------------------
-
-		encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;
 		
+		if(vent_mode == 0){
+			encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;
+		}
+		else{
+			encender_vent = vent_forzado;
+		}
+		
+		/* ---------------------------------------------------
+				Envio de mensajes a los modulos de salida
+		---------------------------------------------------- */
 		if(encender_vent != encender_vent_anterior){
 			osMessageQueuePut(mid_Msg_Ventilador, &encender_vent, 0, 0);
 		}
 		
-		// ------------------------------------------------- GESTIONAR LA COLA DEL GARAJE --------------------------------------------------------------
 		if( on_off_garaje_anterior != on_off_garaje){
 			osMessageQueuePut(mid_MsgGaraje, &on_off_garaje, 0, 0);
 		}
 		on_off_garaje_anterior = on_off_garaje;
 		encender_vent_anterior = encender_vent;
 		
-		/* ---------------------------------------------------
-				Envio de mensajes a los modulos de salida
-		---------------------------------------------------- */
 		osMessageQueuePut(mid_MsgLCD, &LCDDatos, 0, 0);
 		osDelay(250);		// Para evitar que se este actualizando todo el rato
 		osThreadYield();

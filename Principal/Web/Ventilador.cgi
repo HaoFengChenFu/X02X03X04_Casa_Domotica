@@ -13,6 +13,12 @@ t  <th width=100%>Configuracion del Ventilador </th> </tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px" /td>
 t <p align=left>
 t <tr>
+t <form><h4>
+t <input type="radio" id="VentMode" name=VentMode value = "1">
+t <label for="VentMode">Modo Manual</label><br>
+t <input type="radio" id="VentMode" name=VentMode value = "0">
+t <label for="VentMode">Modo Automatico</label><br>
+t </h4>
 t <td align="center">
 t <form>
 t <label for="prueba">Elige el umbral de la temperatura (Entre 10 y 100 ºC):</label>

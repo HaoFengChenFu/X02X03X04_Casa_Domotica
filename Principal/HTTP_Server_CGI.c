@@ -27,9 +27,9 @@ extern Mensaje_Temp_Hum datos_SHT30;
 extern Tiempo_Fecha datos_horarios;
 extern Mensaje_Iluminacion datos_luz;
 
-extern uint8_t vent_forzado, luz_forzada;
+extern uint8_t vent_forzado, luz_forzada, vent_mode;
 
-
+static uint8_t umbralTemp_anterior;
 
 //#include "Board_LED.h"                  // ::Board Support:LED
 
@@ -157,11 +157,20 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
 				printf("Apagado forzado del ventilador\n");
 				vent_forzado = 0;
 			}
+      else if (strcmp (var, "VentMode=1") == 0) {
+				printf("Modo manual Ventilador\n");
+				vent_mode = 1;
+      }
+			else if (strcmp (var, "VentMode=0") == 0){
+				printf("Modo automatico Ventilador\n");
+				vent_mode = 0;
+			}
       else if (strncmp (var, "UmbralTemp=", strlen("UmbralTemp=")) == 0) {
 				
 				umbralTemp = atoi(&var[11]);
-				printf("Valor del pulso: %d ºC\n", umbralTemp);
-				printf("Falta saber por donde se va a enviar\n");
+				umbralTemp = (umbralTemp < 10)? umbralTemp_anterior: umbralTemp;
+				umbralTemp_anterior = umbralTemp;
+
       }
     }
   } while (data);
