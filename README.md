@@ -6,15 +6,15 @@
 | Pines | Funcionalidad             |
 |-------|---------------------------|
 | PE11  | Interrupción PIR                |
-| PD14  | Interrupción del mando a distancia 	|
-| PD13  | Interrupción del botón de usuario   |
+| PD12  | Interrupción del mando a distancia 	|
+| PC13  | Interrupción del botón de usuario   |
 | PC3   | ADC del LDR |
 | PD15	| PWM LDR (TIM4_CH4)		|
 | PB8   | SCL Temperatura y Humedad |
 | PB9   | SDA Temperatura y Humedad |
 | PC6	| Ventilador				|
 | PB4   | Servomotor Ventilador 	|
-
+| PD13  | Servomotor Puertas Garaje   |
 
 
 ***
