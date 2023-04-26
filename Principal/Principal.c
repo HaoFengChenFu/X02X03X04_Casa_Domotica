@@ -16,6 +16,9 @@ Mensaje_Iluminacion datos_luz;
 uint8_t encender_vent = 0;
 uint8_t vent_forzado, luz_forzada;
 
+char* dataTemp, dataHum;
+uint8_t numPalabras;
+char* buffer;
 /*---------------------------------
   	Cola de mensajes de entrada
  *---------------------------------*/
@@ -109,6 +112,16 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
 		
+		
+		
+		sprintf(dataTemp, "t -> %.2f ºC", datos_SHT30.temperatura);
+		numPalabras = num_palabras_string(dataTemp);
+		
+		escritura_flash_string_format(FLASH_SECTOR_8, 1, 0x08080100, dataTemp);
+		
+		buffer = lectura_flash_string_format(0x08080100, (uint16_t)numPalabras);
+		
+		printf("\n\n\n %s \n\n\n", buffer);
 		/* ---------------------------------------------------------------------
 			 Asignacion de valores para enviar mensajes a los módulos de salida
 		--------------------------------------------------------------------- */

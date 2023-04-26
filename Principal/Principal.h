@@ -16,6 +16,7 @@
 	
 	#include "Mando.h"
 	#include "PuertaGaraje.h"
+	#include "flashLib.h"
 	
 	typedef struct{
 		uint8_t horas;
