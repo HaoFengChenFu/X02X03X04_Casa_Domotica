@@ -36,7 +36,7 @@ void Init_Mando_Pin(void)
    __HAL_RCC_GPIOD_CLK_ENABLE();
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 	
-  GPIO_InitStruct.Pin = GPIO_PIN_14;
+  GPIO_InitStruct.Pin = GPIO_PIN_12;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
 	
@@ -63,7 +63,7 @@ if (rebotes_id != NULL) {
           Callback del timer virtual para los rebotes
  -----------------------------------------------------------------*/
 static void Callback_TimerRebotes (void *argument) {
-  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_14) == GPIO_PIN_RESET){
+  if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_12) == GPIO_PIN_RESET){
 
 		if(on_off==0) 
 			 on_off=1;

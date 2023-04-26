@@ -10,7 +10,7 @@ void EXTI15_10_IRQHandler(void)
 {
 	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);			// PIR
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);      // Usuario
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);			// Mando
+  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);			// Mando
 }
 
 /*------------------------------------------------------------------
@@ -31,7 +31,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN)
   else if(GPIO_PIN == GPIO_PIN_13){    // Arriba, Derecha, Abajo, Izquierda, Centro y Usuario
     osThreadFlagsSet(tid_ThPulsador, 1);    // Activamos un flag para que detecte que se pulsado el joystick
   }
-  else if(GPIO_PIN == GPIO_PIN_14){    // Interrupcion del mando
+  else if(GPIO_PIN == GPIO_PIN_12){    // Interrupcion del mando
 		osThreadFlagsSet(tid_ThMando,0x01);
   }
 }

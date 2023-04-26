@@ -48,10 +48,10 @@ void ThTermostato (void *argument) {
 		  if(encender==1){//comprobamos umbral
 		    encender_ventilador();
 				// -------------------------------------------------------------- POR DESCOMENTAR -------------------------------------------------------------
-				//move_servo();
+				move_servo();
 		  }else {
 			  apagar_ventilador();
-				//stop_servo();	
+				stop_servo();	
 		  }
   osThreadYield();                            // suspend thread
   }

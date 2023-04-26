@@ -95,7 +95,7 @@ void ThPrincipal (void *argument) {
 	uint8_t porcentaje = 0;
 	uint8_t modo = 0;
 	uint8_t encender_vent_anterior = 0;
-	uint8_t on_off_garaje = 0;
+	uint8_t on_off_garaje = 0, on_off_garaje_anterior;
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -141,8 +141,10 @@ void ThPrincipal (void *argument) {
 		}
 		
 		// ------------------------------------------------- GESTIONAR LA COLA DEL GARAJE --------------------------------------------------------------
-		osMessageQueuePut(mid_MsgGaraje, &on_off_garaje, 0, 0);
-		
+		if( on_off_garaje_anterior != on_off_garaje){
+			osMessageQueuePut(mid_MsgGaraje, &on_off_garaje, 0, 0);
+		}
+		on_off_garaje_anterior = on_off_garaje;
 		encender_vent_anterior = encender_vent;
 		
 		/* ---------------------------------------------------
