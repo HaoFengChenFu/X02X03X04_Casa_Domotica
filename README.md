@@ -26,6 +26,6 @@ Cuando se haya acabado una tarea hay que entrar en el README.md y añadir una x 
 |---------------|---------------------------------------------------|-------|
 | Consumo LCD 	| Mostrar el consumo en el LCD 						|<ul><li>- [x] Acabado </li></ul>|
 | Alimentacion	| Acabar la alimentacion de la placa y los sensores	|<ul><li>- [ ] Acabado </li></ul>|
-| Servidor   	| Acabar el servidor 								|<ul><li>- [ ] Acabado </li></ul>|
+| Servidor   	| Acabar el servidor 								|<ul><li>- [x] Acabado </li></ul>|
 | Bajo consumo  | Gestionar el modo de bajo consumo					|<ul><li>- [ ] Acabado </li></ul>|
 | Flash			| Gestionar el guardado de la Flash					|<ul><li>- [ ] Acabado </li></ul>|
