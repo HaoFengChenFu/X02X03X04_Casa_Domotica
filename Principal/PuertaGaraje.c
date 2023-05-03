@@ -188,7 +188,7 @@ static void Callback_TimerServo (void *argument) {
 	  pulso--;
 	}
 	
-	if(pulso==3100 || pulso == 3800){
+	if(pulso==3100 || pulso == 3500){
 		parar_Puerta_Garaje();
 		if(pulso==3800)
 			osTimerStart(id_time_out,5000);

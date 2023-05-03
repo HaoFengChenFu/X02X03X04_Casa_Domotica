@@ -42,7 +42,7 @@
 #include "Principal.h"
 
 
-
+FLASH_OBProgramInitTypeDef *ob;
 
 #ifdef RTE_CMSIS_RTOS2_RTX5
 /**
@@ -109,6 +109,7 @@ int main(void)
 
   /* Add your application code here
      */
+	HAL_FLASHEx_OBGetConfig(ob);
 
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */

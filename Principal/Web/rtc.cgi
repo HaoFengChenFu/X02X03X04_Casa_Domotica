@@ -17,7 +17,7 @@ t }
 t  </script> </head>
 i pg_header.inc
 t <h2 align=center><br>Modulo de Control del RTC</h2>
-t <p><font size="2">Esta página muestra el valor del tiempo y la fecha del <b>Modulo RTC</b>.
+t <p><font size="2">Esta página muestra el valor del <b> tiempo y la fecha </b>.
 #t  Simply enter the text which you want to display and click <b>Send</b>.<br><br>
 #t  This Form uses a <b>POST</b> method to send data to a Web server.</font></p>
 t <form action="rtc.cgi" method="post" name="rtc">
@@ -32,7 +32,7 @@ c r 1 size="27" id="rtc_time_value" value="%s"></td></tr>
 t </font></table>
 t <p align=center>
 t <input type=button value="Refresh" onclick="updateMultiple(rtcUpdate,updateValueRTC)">
-t Periodic:<input type="checkbox" id="adChkBox" onclick="periodicUpdateRTC()">
+t <input type="checkbox" id="adChkBox" onclick="periodicUpdateRTC()"> Actualización periódica
 t </p></form>
 i pg_footer.inc
 . End of script must be closed with period.

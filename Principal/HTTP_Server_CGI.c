@@ -21,7 +21,7 @@ uint8_t umbralTemp = 25;
 	num_pag_web es importante, por alguna razón el cgx debe apuntar solamente a uno de los cases. Por eso, cuando entramos en una pagina 
 	se va a indicar donde está y el refresco funcionará en función de la página
 */
-uint8_t num_pag_web;				// 0: Humedad			1: Luminosidad			2: RTC			3: Temperatura
+uint8_t num_pag_web;				// 0: Humedad			1: Luminosidad			2: RTC			3: Temperatura		4: Consumo
 
 extern Mensaje_Temp_Hum datos_SHT30;
 extern Tiempo_Fecha datos_horarios;
@@ -306,10 +306,11 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					num_pag_web = 0;
 			break;
 		
-//		case 'g':				// Refresco Humedad "Humedad.cgx"
-//					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
-//          len = (uint32_t)sprintf (buf, &env[1], prueba);
-//			break;
+		case 'i':				// Consumo
+					sprintf(prueba, "Ahora solo representa la humedad %.2f %%", datos_SHT30.humedad);
+          len = (uint32_t)sprintf (buf, &env[4], prueba);
+					num_pag_web = 4;
+			break;
 
     case 'l':				// Luminosidad
 					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
@@ -354,7 +355,10 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 					
-					
+					case 4:
+							sprintf(prueba, "Humedad:  %.2f %%", datos_SHT30.humedad);
+							len = (uint32_t)sprintf (buf, &env[1], prueba);
+					break;
 				}
 
       break;

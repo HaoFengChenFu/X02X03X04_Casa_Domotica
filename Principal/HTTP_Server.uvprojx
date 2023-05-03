@@ -658,6 +658,16 @@
               <FileType>9</FileType>
               <FilePath>.\Web\Luminosidad.cgx</FilePath>
             </File>
+            <File>
+              <FileName>Consumo.cgi</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Consumo.cgi</FilePath>
+            </File>
+            <File>
+              <FileName>Consumo.cgx</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Consumo.cgx</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1338,6 +1348,16 @@
               <FileName>Luminosidad.cgx</FileName>
               <FileType>9</FileType>
               <FilePath>.\Web\Luminosidad.cgx</FilePath>
+            </File>
+            <File>
+              <FileName>Consumo.cgi</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Consumo.cgi</FilePath>
+            </File>
+            <File>
+              <FileName>Consumo.cgx</FileName>
+              <FileType>9</FileType>
+              <FilePath>.\Web\Consumo.cgx</FilePath>
             </File>
           </Files>
         </Group>

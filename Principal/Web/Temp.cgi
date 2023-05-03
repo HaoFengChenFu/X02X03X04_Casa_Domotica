@@ -30,7 +30,7 @@ c t 1 size="27" id="temp_value" value="%s"></td></tr>
 t </font></table>
 t <p align=center>
 t <input type=button value="Refresh" onclick="updateMultiple(tempUpdate,updateValueTemp)">
-t Periodic:<input type="checkbox" id="adChkBox" onclick="periodicUpdateTemp()">
+t <input type="checkbox" id="adChkBox" onclick="periodicUpdateTemp()"> Actualización periódica
 t </p></form>
 i pg_footer.inc
 . End of script must be closed with period.

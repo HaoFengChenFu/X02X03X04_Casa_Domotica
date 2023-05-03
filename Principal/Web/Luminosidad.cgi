@@ -17,7 +17,7 @@ t }
 t  </script> </head>
 i pg_header.inc
 t <h2 align=center><br>Modulo de Luminosidad</h2>
-t <p><font size="2">Esta página muestra el valor de la luminosidad.
+t <p><font size="2">Esta página muestra el valor de la <b> luminosidad <b>.
 t <form action="Luminosidad.cgi" method="post" name="luminosidad">
 t <input type="hidden" value="luminosidad" name="pg">
 t <br>

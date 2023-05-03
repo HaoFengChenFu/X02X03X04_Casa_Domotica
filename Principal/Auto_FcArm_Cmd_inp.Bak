@@ -16,5 +16,7 @@ Humedad.cgi,
 Humedad.cgx,
 Ventilador.cgi,
 Luminosidad.cgi,
-Luminosidad.cgx 
+Luminosidad.cgx,
+Consumo.cgi,
+Consumo.cgx 
 TO Web.c RTE NOPRINT ROOT(Web)
