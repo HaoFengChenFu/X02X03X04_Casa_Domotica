@@ -2,7 +2,8 @@
 #define __PRINCIPAL_H
 	#include "cmsis_os2.h"
 	#include "stm32f4xx_hal.h"
-	#include "stdio.h"
+	#include <stdio.h>
+	#include <string.h>
 	
 	#include "rtc.h"
 	#include "lcd.h"

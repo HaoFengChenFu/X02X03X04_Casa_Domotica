@@ -42,6 +42,10 @@
  void escritura_flash(uint32_t sector_inicial,uint32_t n_sectores, uint16_t numero_palabras_escritura , uint32_t inicio_direccion_escritura , uint32_t *datos){
 	 //DESBLOQUEO
 	  habilitacion_flash();
+	 
+	 //limpiamos algunos flags de errror antes de hacer cualquier operacion de escritura con la flash, para evitar posibles problemas a la hora de la escritura
+	 __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGPERR | FLASH_FLAG_PGSERR);
+	 
 	 //BORRADO 
 	 //configuración de los parametros de borrado
 	 FLASH_EraseInitTypeDef pEreaseInit;
@@ -55,7 +59,7 @@
 	 
 	if( HAL_FLASHEx_Erase(&pEreaseInit,&sectorError) != HAL_OK){
 		
-	  printf("Error al borrar sector de la flash");
+	  printf("Error %d al borrar sector de la flash",HAL_FLASH_GetError());
 	}
 	//ESCRITURA PALABRA A PALABRA
 	int i_palabras=0;//iterador que se utiliza para recorrer palabra a palabra
@@ -69,7 +73,7 @@
 	     }
 	     else
 	     {
-	    	 printf("Error al escribir en la memoria flash");
+	    	 printf("Error %d al escribir sector de la flash",HAL_FLASH_GetError());
 	     }
 	   }	
 	//BLOQUEO
@@ -144,7 +148,7 @@
  *     Return uint32_t buffer: buffer con los datos leidos 
  *---------------------------------------------------------------------------*/
  
- char* lectura_flash_string_format(uint32_t inicio_direccion_escritura, uint16_t palabras_lectura){
+ char* lectura_flash_string_format(uint32_t inicio_direccion_escritura, int palabras_lectura){
 	 
 	 char* buffer_str;//buffer donde vamos a guardar la informacion leida por la flash en formato string
 	 

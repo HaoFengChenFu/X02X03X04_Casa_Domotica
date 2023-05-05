@@ -16,9 +16,19 @@ Mensaje_Iluminacion datos_luz;
 uint8_t encender_vent = 0;
 uint8_t vent_forzado, luz_forzada, vent_mode;
 
+static osStatus_t nueva_medida_temp_hum;
 char* dataTemp, dataHum;
 uint8_t numPalabras;
 char* buffer;
+
+ char *buffer_rx_flash;
+ char  buffer_tx_flash[5000];
+static char string_escritura_flash[38];
+ int numero_palabras_escritura_flash;//numero de palabras que se guardan en una unica escritura de la flash
+static int numero_palabras_totales_flash=0;//numero de palabras totales que hemos guardado en la flash
+
+
+
 /*---------------------------------
   	Cola de mensajes de entrada
  *---------------------------------*/
@@ -99,6 +109,8 @@ void ThPrincipal (void *argument) {
 	uint8_t modo = 0;
 	uint8_t encender_vent_anterior = 0;
 	uint8_t on_off_garaje = 0, on_off_garaje_anterior;
+	
+	
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -109,7 +121,7 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgLDR, &porcentaje, 0, 0);
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
-		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
+		nueva_medida_temp_hum=osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
 	
 		/* ---------------------------------------------------------------------
@@ -158,7 +170,19 @@ void ThPrincipal (void *argument) {
 		encender_vent_anterior = encender_vent;
 		
 		osMessageQueuePut(mid_MsgLCD, &LCDDatos, 0, 0);
-		osDelay(250);		// Para evitar que se este actualizando todo el rato
+		
+		/* ---------------------------------------------------------------------------------
+				Escritura de las nuevas medidas de temperatura y humedad junto su time stamp
+		    NOTA: (METER TODAS LAS MEDIDAS CUANDO VAYAMOS AL MODO SLEEP)
+		------------------------------------------------------------------------------------ */
+		
+		if(nueva_medida_temp_hum == osOK){
+		  sprintf(string_escritura_flash,"%.2d:%.2d:%.2d->T:%.2f|C H:%.2f%%\n",datosFechaHora.horas,datosFechaHora.minutos,datosFechaHora.segundos,datos_SHT30.temperatura,datos_SHT30.humedad);
+		  strcat(buffer_tx_flash,string_escritura_flash);//concatenamos medidas realizadas
+		}
+		
+  	osDelay(250);		// Para evitar que se este actualizando todo el rato
 		osThreadYield();
-  }
+
+	}	
 }
