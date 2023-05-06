@@ -318,10 +318,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					num_pag_web = 1;
       break;
 		
-//    case 'm':				// Refresco de la Luminosidad
-//					sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
-//          len = (uint32_t)sprintf (buf, &env[1], prueba);
-//      break;
 		
     case 'r':				//RTC
 					sprintf(Time_Date, "Hora : %.2d:%.2d:%.2d | Fecha: %.2d-%.2d-%.4d ",
@@ -369,10 +365,6 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					num_pag_web = 3;
       break;
 
-//		case 'u':				// Refresco Temperatura "Temp.cgx"
-//					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
-//          len = (uint32_t)sprintf (buf, &env[1], prueba);
-//			break;
 
   }
   return (len);

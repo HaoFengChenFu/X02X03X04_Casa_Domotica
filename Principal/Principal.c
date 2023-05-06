@@ -36,7 +36,6 @@ extern osMessageQueueId_t mid_MsgPIR;
 extern osMessageQueueId_t mid_MsgRTC;
 extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
-extern osMessageQueueId_t mid_MsgPulsador;
 extern osMessageQueueId_t mid_MsgMando;
 
 /*---------------------------------
@@ -71,7 +70,6 @@ int Init_ThPrincipal (void) {
 			Inicializar los pines
  *-------------------------------------*/
 void Init_All_Pins(void){
-	Init_Pin_Pulsador();
 	Init_PIR_Pin();
 	Init_Mando_Pin();
 	Init_PWM_Iluminacion_Pin();
@@ -86,7 +84,6 @@ void Init_All_Pins(void){
 void Init_All_Threads (void){
 	Init_ThThermostato();
 	Init_ThLCD();
-	Init_ThPulsador();
 	Init_ThRTC();
 	Init_ThSNTP();
 	Init_ThTemp_Hum();
@@ -106,7 +103,6 @@ void Init_All_Threads (void){
 void ThPrincipal (void *argument) {
 	uint8_t encender_luces = 0;
 	uint8_t porcentaje = 0;
-	uint8_t modo = 0;
 	uint8_t encender_vent_anterior = 0;
 	uint8_t on_off_garaje = 0, on_off_garaje_anterior;
 	
@@ -116,7 +112,6 @@ void ThPrincipal (void *argument) {
 		/* ---------------------------------------------------------------------
 							Obtencion de informacion de los modulos de entrada
 		--------------------------------------------------------------------- */
-		osMessageQueueGet(mid_MsgPulsador, &modo, 0, 0);
 		osMessageQueueGet(mid_MsgPIR, &encender_luces, 0, 0);
 		osMessageQueueGet(mid_MsgLDR, &porcentaje, 0, 0);
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
@@ -124,11 +119,16 @@ void ThPrincipal (void *argument) {
 		nueva_medida_temp_hum=osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
 	
+		
+		//---------------------------------------------------------------------------------------------------------------------------
+		
+		// Aqui debe obtener el consumo
+		
+		//---------------------------------------------------------------------------------------------------------------------------
+		
 		/* ---------------------------------------------------------------------
 			 Asignacion de valores para enviar mensajes a los módulos de salida
 		--------------------------------------------------------------------- */
-		LCDDatos.modo = modo;
-		
 		if(datos_luz.porcentaje_pulso != porcentaje || datos_luz.encender_luz != encender_luces){
 			datos_luz.porcentaje_pulso = porcentaje;
 			datos_luz.encender_luz = encender_luces;
@@ -145,9 +145,6 @@ void ThPrincipal (void *argument) {
 		LCDDatos.mes = datos_horarios.mes = datosFechaHora.mes;
 		LCDDatos.dia = datos_horarios.dia = datosFechaHora.dia;
 		
-		//---------------------------------------------------------------------------------------------------------------------------
-		LCDDatos.consumo = 0; // Aqui debe ir el de consumo
-		//---------------------------------------------------------------------------------------------------------------------------
 		
 		if(vent_mode == 0){
 			encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;

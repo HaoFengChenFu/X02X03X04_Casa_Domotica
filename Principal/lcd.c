@@ -302,19 +302,12 @@ void ThLCD (void *argument) {
   while (1) {
 		osMessageQueueGet(mid_MsgLCD, &datos, 0, 0);
 		LCD_clear();
-		switch(datos.modo){
-			case 0:
-				longitud = sprintf(frase, "H:%.2d:%.2d:%.2d  T:%.2f|C", datos.horas, datos.minutos, datos.segundos, datos.temperatura);
-				symbolToLocalBuffer(1, frase, longitud);
-				longitud = sprintf(frase, "F:%.2d-%.2d-%.2d H:%.2f%%", datos.dia, datos.mes, datos.anno+2000, datos.humedad);
-				symbolToLocalBuffer(2, frase, longitud);
-			break;
-			
-			case 1:
-				longitud = sprintf(frase, "Consumo: %.2f mA", datos.consumo);
-				symbolToLocalBuffer(1, frase, longitud);
-			break;
-		}
+
+		longitud = sprintf(frase, "H:%.2d:%.2d:%.2d  T:%.2f|C", datos.horas, datos.minutos, datos.segundos, datos.temperatura);
+		symbolToLocalBuffer(1, frase, longitud);
+		longitud = sprintf(frase, "F:%.2d-%.2d-%.2d H:%.2f%%", datos.dia, datos.mes, datos.anno+2000, datos.humedad);
+		symbolToLocalBuffer(2, frase, longitud);
+
 		osDelay(100);
 		osThreadYield();
   }
