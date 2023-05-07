@@ -8,7 +8,6 @@
 	#include "rtc.h"
 	#include "lcd.h"
 	#include "Temp_Hum.h"
-	#include "pulsador.h"
 	#include "PIR.h"
 	
 	#include "ThTermostato.h"
@@ -18,6 +17,8 @@
 	#include "Mando.h"
 	#include "PuertaGaraje.h"
 	#include "flashLib.h"
+	
+	#include "pulsador.h"
 	
 	typedef struct{
 		uint8_t horas;

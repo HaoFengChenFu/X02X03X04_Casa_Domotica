@@ -19,8 +19,8 @@
 		
 	} Mensaje_Temp_Hum;
 	
-	
 	int Init_ThTemp_Hum (void);
+	void Init_I2C_Temp_Hum (void);
 	int Init_MsgTemp_Hum (void);
 	
 	void Config_Communication(uint8_t modo_periodico);

@@ -86,14 +86,18 @@ int Init_ThTemp_Hum (void) {
   if (tid_ThTemp_Hum == NULL) {
     return(-1);
   }
+	Init_I2C_Temp_Hum();
+  return(0);
+}
 
+void Init_I2C_Temp_Hum (void) {
 	I2Cdrv_1->Initialize(I2C_SignalEvent_TEMP_HUM);
 	I2Cdrv_1->PowerControl(ARM_POWER_FULL);
 	I2Cdrv_1->Control(ARM_I2C_BUS_SPEED, ARM_I2C_BUS_SPEED_FAST);		// Se usa el Fast porque el sensor de temperatura como maximo soporta una frecuencia de 400 kHz
 	I2Cdrv_1->Control(ARM_I2C_BUS_CLEAR, 0);
-  return(0);
+	
+	Config_Communication(1);
 }
-
 /*------------------------------------------------------------------
 					Configuracion inicial del sensor
 	1: Modo de adquisición periodica		
@@ -147,7 +151,6 @@ void ThTemp_Hum (void *argument) {
 	Init_MsgTemp_Hum();
 	Init_timer_TempHum();
 	
-	Config_Communication(1);
 	osDelay(5);			// Esperar 5 ms para que almenos se actualice los registros y asi no leer valores nulos
 	
   while (1) {		

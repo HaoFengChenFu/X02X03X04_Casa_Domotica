@@ -10,8 +10,8 @@
       <TargetName>Debug</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6160000::V6.16::ARMCLANG</pCCUsed>
-      <uAC6>1</uAC6>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F429ZITx</Device>
@@ -313,7 +313,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>2</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -322,7 +322,7 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>3</wLevel>
+            <wLevel>2</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
@@ -547,6 +547,16 @@
               <FileName>flashLib.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\flashLib.h</FilePath>
+            </File>
+            <File>
+              <FileName>pulsador.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pulsador.c</FilePath>
+            </File>
+            <File>
+              <FileName>pulsador.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pulsador.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1229,6 +1239,16 @@
               <FileType>5</FileType>
               <FilePath>.\flashLib.h</FilePath>
             </File>
+            <File>
+              <FileName>pulsador.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pulsador.c</FilePath>
+            </File>
+            <File>
+              <FileName>pulsador.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pulsador.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1515,47 +1535,47 @@
           <targetInfo name="Debug"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="CORE" Cvariant="IPv4/IPv6 Debug" Cvendor="Keil" Cversion="7.15.0" condition="CMSIS Core with RTOS and Event Recorder">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="CORE" Cvariant="IPv4/IPv6 Debug" Cvendor="Keil" Cversion="7.14.0" condition="CMSIS Core with RTOS and Event Recorder">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
         <targetInfos>
           <targetInfo name="Debug"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="CORE" Cvariant="IPv4/IPv6 Release" Cvendor="Keil" Cversion="7.15.0" condition="CMSIS Core with RTOS" isTargetSpecific="1">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="CORE" Cvariant="IPv4/IPv6 Release" Cvendor="Keil" Cversion="7.14.0" condition="CMSIS Core with RTOS" isTargetSpecific="1">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
         <targetInfos>
           <targetInfo name="Release"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Interface" Csub="ETH" Cvendor="Keil" Cversion="7.15.0" condition="Network Driver ETH" maxInstances="2">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
-        <targetInfos>
-          <targetInfo name="Debug"/>
-          <targetInfo name="Release"/>
-        </targetInfos>
-      </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Service" Csub="SNTP Client" Cvendor="Keil" Cversion="7.15.0" condition="Network UDP">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
-        <targetInfos>
-          <targetInfo name="Debug"/>
-        </targetInfos>
-      </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Service" Csub="Web Server Compact" Cvariant="HTTP" Cvendor="Keil" Cversion="7.15.0" condition="Network Web Server Compact">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Interface" Csub="ETH" Cvendor="Keil" Cversion="7.14.0" condition="Network Driver ETH" maxInstances="2">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
         <targetInfos>
           <targetInfo name="Debug"/>
           <targetInfo name="Release"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Socket" Csub="TCP" Cvendor="Keil" Cversion="7.15.0" condition="Network Interface">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Service" Csub="SNTP Client" Cvendor="Keil" Cversion="7.14.0" condition="Network UDP">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
+        <targetInfos>
+          <targetInfo name="Debug"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Service" Csub="Web Server Compact" Cvariant="HTTP" Cvendor="Keil" Cversion="7.14.0" condition="Network Web Server Compact">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
         <targetInfos>
           <targetInfo name="Debug"/>
           <targetInfo name="Release"/>
         </targetInfos>
       </component>
-      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Socket" Csub="UDP" Cvendor="Keil" Cversion="7.15.0" condition="Network Interface">
-        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.13.0"/>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Socket" Csub="TCP" Cvendor="Keil" Cversion="7.14.0" condition="Network Interface">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
+        <targetInfos>
+          <targetInfo name="Debug"/>
+          <targetInfo name="Release"/>
+        </targetInfos>
+      </component>
+      <component Cbundle="MDK-Pro" Cclass="Network" Cgroup="Socket" Csub="UDP" Cvendor="Keil" Cversion="7.14.0" condition="Network Interface">
+        <package name="MDK-Middleware" schemaVersion="1.4" url="http://www.keil.com/pack/" vendor="Keil" version="7.12.0"/>
         <targetInfos>
           <targetInfo name="Debug"/>
           <targetInfo name="Release"/>

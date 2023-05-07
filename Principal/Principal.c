@@ -70,12 +70,14 @@ int Init_ThPrincipal (void) {
 			Inicializar los pines
  *-------------------------------------*/
 void Init_All_Pins(void){
+	Init_Pin_Pulsador();
 	Init_PIR_Pin();
 	Init_Mando_Pin();
 	Init_PWM_Iluminacion_Pin();
 	Init_PWM_Garaje();
 	init_servo();
 	init_ventilador();
+	Init_I2C_Temp_Hum();
 }
 
 /*---------------------------------------
