@@ -41,7 +41,7 @@
 #include "main.h"
 #include "flashLib.h"
 #include "modo_sleep.h"
-
+#include "configuracion.h"
 
 
 
@@ -89,7 +89,8 @@ uint32_t HAL_GetTick (void) {
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 uint32_t *buffer_lectura=0;
-FLASH_OBProgramInitTypeDef * pOBInit;
+int numero_palabras;
+uint32_t inicio_direccion_escritura=0x08060000;
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
 static void Error_Handler(void);
@@ -121,6 +122,9 @@ int main(void)
   /* Add your application code here
      */
 	
+	configuracion();
+	init_user_botton();
+	
 	//PRUEBA FLASH AL ENTRAR AL MODO SLEEP (metemos 20 medidas antes de entrar al modo sleep)
 
 	char  buffer_tx_flash[5000];
@@ -128,20 +132,21 @@ int main(void)
 	char * buffer_rx;
 	
 	for(int i=0;i<20;i++){
-	   sprintf(string_escritura_flash,"00:00:00->T:20.5|C H:50,42\n");
+	   sprintf(string_escritura_flash,"hol\n");
 		  strcat(buffer_tx_flash,string_escritura_flash);//concatenamos medidas realizadas
 	}
-	int numero_palabras= num_palabras_string(buffer_tx_flash);
+	 numero_palabras= num_palabras_string(buffer_tx_flash);
 	
 	//ENTRAMOS AL MODO SLEEP
 	
 	enter_sleep_mode(buffer_tx_flash);
 	
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_14, GPIO_PIN_SET);
 	
 	//DESPUES DE SALIR DEL MODO SLEEP CON UNA PULSACION DEL BOTON DE USUARIO
-	buffer_rx = lectura_flash_string_format(0x08060000, numero_palabras );//lectura del sector 7
-	printf(" string leido: %s", buffer_rx);
-	
+
+	buffer_rx = lectura_flash_string_format(inicio_direccion_escritura, 20  );//lectura del sector 7
+	printf(" string leido: %s\n", buffer_rx);
 
 #ifdef RTE_CMSIS_RTOS2
   /* Initialize CMSIS-RTOS2 */

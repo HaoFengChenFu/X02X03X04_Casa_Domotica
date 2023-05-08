@@ -16,7 +16,7 @@ Mensaje_Iluminacion datos_luz;
 uint8_t encender_vent = 0;
 uint8_t vent_forzado, luz_forzada, vent_mode;
 
-static osStatus_t nueva_medida_temp_hum;
+ osStatus_t nueva_medida_temp_hum;
 char* dataTemp, dataHum;
 uint8_t numPalabras;
 char* buffer;
@@ -91,7 +91,7 @@ void Init_All_Threads (void){
 	Init_ThTemp_Hum();
 	Init_ThPIR();
 	Init_ThLDR();
-
+  Init_ThPulsador();
 	Init_ThIluminacion();
 	Init_ThMando();
 	Init_ThGaraje();
@@ -118,7 +118,7 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgLDR, &porcentaje, 0, 0);
 		osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
-		nueva_medida_temp_hum=osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 0);
+		nueva_medida_temp_hum=osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 120U);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
 	
 		

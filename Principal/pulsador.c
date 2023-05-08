@@ -1,10 +1,13 @@
 #include "pulsador.h"
+#include "modo_sleep.h"
+#include "principal.h"
 
 /*-------------------------------------------------------------------------------
  *      Thread 'ThPulsador': Hilo que gestiona las interrupciones del pulsador
  *-----------------------------------------------------------------------------*/
 osThreadId_t tid_ThPulsador;
 
+extern char  buffer_tx_flash[5000];
 /*------------------------------------------------------------------
             Funcion del Thread
  -----------------------------------------------------------------*/
@@ -44,17 +47,16 @@ void Init_Pin_Pulsador(void)
             Thread en ejecución
  -----------------------------------------------------------------*/
 void ThPulsador (void *argument) {
+	
   while (1) {
+		
     osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
 		
-    /*
-		
-		
-		Aqui entra en el modo de bajo consumo
-		Y se configura el PIR para salir del modo de bajo consumo
-		
-		
-		*/
+		/* ---------------------------------------------------------------------------------
+				Entrada al modo sleep mode cada vez que se pulse el botón de usuario 
+		------------------------------------------------------------------------------------ */
+		enter_sleep_mode(buffer_tx_flash);
+		printf("Salida modo bajo consumo\n\r");
 		osThreadYield();
   }
 }

@@ -67,7 +67,16 @@
 /******************************************************************************/
 /*            Cortex-M4 Processor Exceptions Handlers                         */
 /******************************************************************************/
+//INTERRUPCION DEL PULSADOR AZUL
+void EXTI15_10_IRQHandler(void){
+	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+}
 
+//ISR DEL PULSADOR AZUL
+void HAL_GPIO_EXTI_Callback( uint16_t GPIO_Pin){
+	if(GPIO_Pin==GPIO_PIN_13){
+	}
+}
 /**
   * @brief   This function handles NMI exception.
   * @param  None
@@ -154,33 +163,7 @@ void DebugMon_Handler(void)
   * @param  None
   * @retval None
   */
-void EXTI15_10_IRQHandler(void)
-{
-	HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);			// PIR
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);      // Usuario
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);			// Mando
-}
 
-/*------------------------------------------------------------------
-						Callback de la interrupcion
- -----------------------------------------------------------------*/
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN)
-{
-	if(GPIO_PIN_11 == GPIO_PIN){
-		if(HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_RESET){
-			printf("Presencia detectada\n");
-		}
-		else if (HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_11) == GPIO_PIN_SET){
-			printf("Presencia detectada\n");
-		}
-	}
-  else if(GPIO_PIN == GPIO_PIN_13){    // Arriba, Derecha, Abajo, Izquierda, Centro y Usuario
-    printf("Pulsacion boton usuario\n");
-  }
-  else if(GPIO_PIN == GPIO_PIN_12){    // Interrupcion del mando
-		 printf("Pulsacion mando\n");
-  }
-}
 
 /**
   * @brief  This function handles PendSVC exception.
