@@ -14,7 +14,7 @@
 | PB9   | SDA Temperatura y Humedad |
 | PC6	| Ventilador				|
 | PB4   | Servomotor Ventilador 	|
-| PD13  | Servomotor Puertas Garaje   |
+| PF7  | Servomotor Puertas Garaje   |
 
 
 ***
