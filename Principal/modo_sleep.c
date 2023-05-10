@@ -29,46 +29,46 @@ void enter_sleep_mode(char * buffer_tx_flash){
 
   /* Configure all GPIO as analog to reduce current consumption on non used IOs */
   /* Enable GPIOs clock */
-//  __HAL_RCC_GPIOA_CLK_ENABLE();
-//  __HAL_RCC_GPIOB_CLK_ENABLE();
-//  //__HAL_RCC_GPIOC_CLK_ENABLE();
-//  //__HAL_RCC_GPIOD_CLK_ENABLE();
-//  __HAL_RCC_GPIOE_CLK_ENABLE();
-//  __HAL_RCC_GPIOF_CLK_ENABLE();
-//  __HAL_RCC_GPIOG_CLK_ENABLE();
-//  __HAL_RCC_GPIOH_CLK_ENABLE();
-//  __HAL_RCC_GPIOI_CLK_ENABLE();
-//  __HAL_RCC_GPIOJ_CLK_ENABLE();
-//  __HAL_RCC_GPIOK_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  //__HAL_RCC_GPIOC_CLK_ENABLE();
+  //__HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOI_CLK_ENABLE();
+  __HAL_RCC_GPIOJ_CLK_ENABLE();
+  __HAL_RCC_GPIOK_CLK_ENABLE();
 
-//  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-//  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-//  GPIO_InitStruct.Pull = GPIO_NOPULL;
-//  GPIO_InitStruct.Pin = GPIO_PIN_All;
-//  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); 
-//  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-//  //HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-//  //HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-//  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-//  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-//  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-//  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct); 
-//  HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
-//  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct); 
-//  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pin = GPIO_PIN_All;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  //HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  //HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct); 
+  HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct); 
+  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
 
   /* Disable GPIOs clock */
-//  __HAL_RCC_GPIOA_CLK_DISABLE();
-//  __HAL_RCC_GPIOB_CLK_DISABLE();
-//  //__HAL_RCC_GPIOC_CLK_DISABLE();
-//  //__HAL_RCC_GPIOD_CLK_DISABLE();
-//  __HAL_RCC_GPIOE_CLK_DISABLE();
-//  __HAL_RCC_GPIOF_CLK_DISABLE();
-//  __HAL_RCC_GPIOG_CLK_DISABLE();
-//  __HAL_RCC_GPIOH_CLK_DISABLE();
-//  __HAL_RCC_GPIOI_CLK_DISABLE();
-//  __HAL_RCC_GPIOJ_CLK_DISABLE();
-//  __HAL_RCC_GPIOK_CLK_DISABLE();
+  __HAL_RCC_GPIOA_CLK_DISABLE();
+  __HAL_RCC_GPIOB_CLK_DISABLE();
+  //__HAL_RCC_GPIOC_CLK_DISABLE();
+  //__HAL_RCC_GPIOD_CLK_DISABLE();
+  __HAL_RCC_GPIOE_CLK_DISABLE();
+  __HAL_RCC_GPIOF_CLK_DISABLE();
+  __HAL_RCC_GPIOG_CLK_DISABLE();
+  __HAL_RCC_GPIOH_CLK_DISABLE();
+  __HAL_RCC_GPIOI_CLK_DISABLE();
+  __HAL_RCC_GPIOJ_CLK_DISABLE();
+  __HAL_RCC_GPIOK_CLK_DISABLE();
 
   /* Configure user Button */
   //BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);

@@ -101,22 +101,25 @@ void Config_PWM_Pulse_Garaje(uint8_t pulse)
 void ThGaraje (void *argument) {
 	Init_MsgQueue_Garaje();
 	//Init_PWM_Garaje();
-	
+
   while (1) {	
 		osMessageQueueGet(mid_MsgGaraje, &on_off_garaje,0,osWaitForever);
 		if(on_off_garaje == 0){
 				while(pulso < 2000){
-				pulso+=2;
-				Config_PWM_Pulse_Garaje(pulso);
-				osDelay(10);
+					pulso+=2;
+					Config_PWM_Pulse_Garaje(pulso);
+					osDelay(10);
 			}
 		}
 		else{
 				while(pulso > 1500){
-				pulso-=2;
-				Config_PWM_Pulse_Garaje(pulso);
-				osDelay(10);
+					pulso-=2;
+					Config_PWM_Pulse_Garaje(pulso);
+					osDelay(10);
 			}
+		}
+		if(on_off_garaje == 1){
+			osTimerStart(id_time_out,5000);
 		}
 		osThreadYield();                            // suspend thread
 	}
