@@ -7,8 +7,8 @@
 	#include "stdbool.h"
 	
 	
-	#define PRESCALER_TIM4 210-1
-	#define PERIOD_TIM4 8000-1
+	#define PRESCALER_TIM11 210-1
+	#define PERIOD_TIM11 8000-1
 	
 	
 	void mover_Puerta_Garaje(void);

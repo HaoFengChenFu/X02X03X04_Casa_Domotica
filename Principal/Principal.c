@@ -106,7 +106,7 @@ void ThPrincipal (void *argument) {
 	uint8_t encender_luces = 0;
 	uint8_t porcentaje = 0;
 	uint8_t encender_vent_anterior = 0;
-	uint8_t on_off_garaje = 0, on_off_garaje_anterior;
+	uint8_t on_off_garaje = 0, on_off_garaje_anterior = 1;
 	
 	
   while (1) {

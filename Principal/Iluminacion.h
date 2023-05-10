@@ -10,7 +10,7 @@
 	#include "stdio.h"
 
 	#define PERIODO 8000-1
-	#define PRESCALER 42-1
+	#define PRESCALER 42-1				// Cambiado de 42 a 210
 
 	typedef struct
 	{
