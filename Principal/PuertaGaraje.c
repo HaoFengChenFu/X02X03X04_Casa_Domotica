@@ -14,7 +14,7 @@ osMessageQueueId_t mid_MsgGaraje;
 
 osTimerId_t Timer_Garaje_id;                              //timer periodic id
 osTimerId_t id_time_out;
-
+osTimerId_t periodic_id_2;  
 static TIM_HandleTypeDef htim11;
 static TIM_OC_InitTypeDef Channel_Tim11_Config;
 static GPIO_InitTypeDef GPIO_InitStruct;
@@ -23,7 +23,7 @@ static GPIO_InitTypeDef GPIO_InitStruct;
 extern void ThGaraje (void *argument);                   // thread function
 static void Callback_TimerServo (void *argument);
 static void Init_servo_Timer_periodic (void);
-//static void Callback_TimeOut(void *argument);
+static void Callback_TimeOut(void *argument);
 
  
 int Init_ThGaraje (void) {
@@ -36,6 +36,8 @@ int Init_ThGaraje (void) {
 }
  
 
+
+
 int Init_MsgQueue_Garaje(void){
 	osStatus_t status;
 	mid_MsgGaraje = osMessageQueueNew(4, sizeof(uint8_t), NULL);
@@ -47,6 +49,8 @@ int Init_MsgQueue_Garaje(void){
 	}
 	return 0;
 }
+
+
 
 void Init_PWM_Garaje(void)
 {
@@ -98,29 +102,128 @@ void Config_PWM_Pulse_Garaje(uint8_t pulse)
 
 
 
-void ThGaraje (void *argument) {
-	Init_MsgQueue_Garaje();
-	//Init_PWM_Garaje();
+void mueve_garaje(void){
+	//set timer periodic 
+	if (periodic_id_2 == NULL) {
+    Init_servo_Timer_periodic ();
+  }
+	osTimerStart(periodic_id_2,10);
+}
 
+/*------------------------------------------------------------------
+				función para parar el servomotor
+ -----------------------------------------------------------------*/
+void para_garaje(void){
+	//set timer periodic 
+	if (periodic_id_2 != NULL) {
+    osTimerStop(periodic_id_2);
+  }
+	//paramos la señal PWM
+	HAL_TIM_PWM_DeInit(&htim11);
+	HAL_TIM_PWM_Stop(&htim11, TIM_CHANNEL_1);
+}
+
+
+/*------------------------------------------------------------------
+				función para inicializar el servomotor, se calibrará el
+        servo respecto a los 0º del servomotor. El servo funciona 
+        con una señal PWM. Dependiendo del ancho del pulso se movera
+        unos grados espefificos.
+        funciona con una frecuencia de 50 Hz (datasheet)
+        mover a 0º= ancho de 1,5 ms (pulse=600)
+        mover a 90º= ancho de 2 ms  (pulse=800)
+        mover a -90º= ancho de 1 ms (pulse=400)
+ -----------------------------------------------------------------*/
+
+
+
+
+static void Init_servo_TimeOut (void)  {
+	 uint32_t exec1=27U;// argument for the timer call back
+ id_time_out = osTimerNew(Callback_TimeOut, osTimerOnce,&exec1, NULL); // 
+if (id_time_out != NULL) {
+    // One-shoot timer created
+  }else{
+		printf("timer del servo no ha sido creado correctamente");
+	}
+}
+
+
+static void Callback_TimeOut(void *argument){
+  
+	if(time_out==true)
+		time_out=false;
+	else
+		time_out=true;
+	
+	mueve_garaje();
+
+
+}
+
+/*------------------------------------------------------------------
+				inicialización de un timer periodico para rotar el 
+        servomotor
+ -----------------------------------------------------------------*/
+
+
+static void Init_servo_Timer_periodic (void)  {
+ 
+ uint32_t exec1=1U;// argument for the timer call back
+	
+ periodic_id_2 = osTimerNew(Callback_TimerServo, osTimerPeriodic,&exec1, NULL); // 
+if (periodic_id_2 != NULL) {
+    // One-shoot timer created
+  }else{
+		printf("timer del servo no ha sido creado correctamente");
+	}
+}
+void ThGaraje (void *argument) {
+	 Init_MsgQueue_Garaje();
+	 Init_servo_TimeOut();
+ Init_servo_Timer_periodic();
+	 
   while (1) {	
 		osMessageQueueGet(mid_MsgGaraje, &on_off_garaje,0,osWaitForever);
-		if(on_off_garaje == 0){
-				while(pulso < 2000){
-					pulso+=2;
-					Config_PWM_Pulse_Garaje(pulso);
-					osDelay(10);
-			}
-		}
-		else{
-				while(pulso > 1500){
-					pulso-=2;
-					Config_PWM_Pulse_Garaje(pulso);
-					osDelay(10);
-			}
-		}
-		if(on_off_garaje == 1){
-			osTimerStart(id_time_out,5000);
-		}
+
+
+
+
+			mueve_garaje();
+  
 		osThreadYield();                            // suspend thread
+  
 	}
+}
+
+/*------------------------------------------------------------------
+				           Callback del Timer periodico
+        función para mover el servomotor que esta unido al 
+        ventilador 180º de un lado para otro. Cada 20 ms se suma
+        o se resta 1º para mover el ventilador 
+ -----------------------------------------------------------------*/
+static void Callback_TimerServo (void *argument) {
+	
+	if(on_off_garaje==0 && time_out==false){
+		pulso++; //servo_bajando
+	}else if(on_off_garaje==1 && time_out==false){
+		pulso--; //servo subiendo
+	}else if(on_off_garaje==0 && time_out==true){
+	  pulso--;
+	}else{
+	  pulso++ ;
+	}
+
+	
+	if(pulso==2000 || pulso == 1500){
+
+		para_garaje();
+		if(pulso==1500)
+			osTimerStart(id_time_out,5000);
+	
+	}
+	
+	
+	Config_PWM_Pulse_Garaje(pulso);
+	
 }

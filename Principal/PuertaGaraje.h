@@ -11,8 +11,8 @@
 	#define PERIOD_TIM11 8000-1
 	
 	
-	void mover_Puerta_Garaje(void);
-	void parar_Puerta_Garaje(void);
+	void mueve_garaje(void);
+	void para_garaje(void);
 	int Init_ThGaraje (void);
 	void Init_PWM_Garaje(void);
   int Init_MsgQueue_Garaje(void);	
