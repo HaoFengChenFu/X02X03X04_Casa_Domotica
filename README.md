@@ -15,6 +15,8 @@
 | PC6	| Ventilador				|
 | PB4   | Servomotor Ventilador 	|
 | PF7  | Servomotor Puertas Garaje   |
+| PC0   | ADC Corriente |
+| PA3   | ADC Sismo |
 
 
 ***
