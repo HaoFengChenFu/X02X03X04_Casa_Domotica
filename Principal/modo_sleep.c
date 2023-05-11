@@ -1,7 +1,7 @@
 #include "modo_sleep.h"
 #include "flashLib.h"
 #include "pulsador.h"
-
+#include "principal.h"
 
 
 /**
@@ -36,52 +36,52 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
 
   /* Configure all GPIO as analog to reduce current consumption on non used IOs */
   /* Enable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  //__HAL_RCC_GPIOB_CLK_ENABLE();
-  //__HAL_RCC_GPIOC_CLK_ENABLE();
-  //__HAL_RCC_GPIOD_CLK_ENABLE();
-  //__HAL_RCC_GPIOE_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
-  __HAL_RCC_GPIOG_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOI_CLK_ENABLE();
-  __HAL_RCC_GPIOJ_CLK_ENABLE();
-  __HAL_RCC_GPIOK_CLK_ENABLE();
+//  __HAL_RCC_GPIOA_CLK_ENABLE();
+//  //__HAL_RCC_GPIOB_CLK_ENABLE();
+//  //__HAL_RCC_GPIOC_CLK_ENABLE();
+//  //__HAL_RCC_GPIOD_CLK_ENABLE();
+//  //__HAL_RCC_GPIOE_CLK_ENABLE();
+//  __HAL_RCC_GPIOF_CLK_ENABLE();
+//  __HAL_RCC_GPIOG_CLK_ENABLE();
+//  __HAL_RCC_GPIOH_CLK_ENABLE();
+//  __HAL_RCC_GPIOI_CLK_ENABLE();
+//  __HAL_RCC_GPIOJ_CLK_ENABLE();
+//  __HAL_RCC_GPIOK_CLK_ENABLE();
 
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Pin = GPIO_PIN_All;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); 
-  //HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-  //HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-  //HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
-  //HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct); 
-  HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
-  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct); 
-  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
+//  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+//  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+//  GPIO_InitStruct.Pull = GPIO_NOPULL;
+//  GPIO_InitStruct.Pin = GPIO_PIN_All;
+//  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct); 
+//  //HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+//  //HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+//  //HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+//  //HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+//  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+//  HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+//  HAL_GPIO_Init(GPIOH, &GPIO_InitStruct); 
+//  HAL_GPIO_Init(GPIOI, &GPIO_InitStruct);
+//  HAL_GPIO_Init(GPIOJ, &GPIO_InitStruct); 
+//  HAL_GPIO_Init(GPIOK, &GPIO_InitStruct);
 
-  /* Disable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_DISABLE();
-  //__HAL_RCC_GPIOB_CLK_DISABLE();
-  //__HAL_RCC_GPIOC_CLK_DISABLE();
-  //__HAL_RCC_GPIOD_CLK_DISABLE();
-  //__HAL_RCC_GPIOE_CLK_DISABLE();
-  __HAL_RCC_GPIOF_CLK_DISABLE();
-  __HAL_RCC_GPIOG_CLK_DISABLE();
-  __HAL_RCC_GPIOH_CLK_DISABLE();
-  __HAL_RCC_GPIOI_CLK_DISABLE();
-  __HAL_RCC_GPIOJ_CLK_DISABLE();
-  __HAL_RCC_GPIOK_CLK_DISABLE();
+//  /* Disable GPIOs clock */
+//  __HAL_RCC_GPIOA_CLK_DISABLE();
+//  //__HAL_RCC_GPIOB_CLK_DISABLE();
+//  //__HAL_RCC_GPIOC_CLK_DISABLE();
+//  //__HAL_RCC_GPIOD_CLK_DISABLE();
+//  //__HAL_RCC_GPIOE_CLK_DISABLE();
+//  __HAL_RCC_GPIOF_CLK_DISABLE();
+//  __HAL_RCC_GPIOG_CLK_DISABLE();
+//  __HAL_RCC_GPIOH_CLK_DISABLE();
+//  __HAL_RCC_GPIOI_CLK_DISABLE();
+//  __HAL_RCC_GPIOJ_CLK_DISABLE();
+//  __HAL_RCC_GPIOK_CLK_DISABLE();
 
   /* Configuracion del boton de usuario en modo interrupcion */
   
 	 Init_Pin_Pulsador();
 	 
-	 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_14);
+	 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_7);
 	
   /* Suspend Tick increment to prevent wakeup by Systick interrupt. 
      Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base) */
@@ -93,7 +93,9 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
   /* Resume Tick interrupt if disabled prior to sleep mode entry */
   HAL_ResumeTick();
 	
-	HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_14);
+	HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_7);
+	
+	Init_All_Pins();
   /* Exit Ethernet Phy from LowPower mode */
  // ETH_PhyExitFromPowerDownMode();
  

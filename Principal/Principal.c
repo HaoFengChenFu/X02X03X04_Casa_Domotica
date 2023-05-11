@@ -68,6 +68,9 @@ int Init_ThPrincipal (void) {
 			Inicializar los pines
  *-------------------------------------*/
 void Init_All_Pins(void){
+	LCD_reset();
+	LCD_Init();
+	LCD_clear();
 	Init_Pin_Pulsador();
 	Init_PIR_Pin();
 	Init_Mando_Pin();
