@@ -7,7 +7,8 @@
  *-----------------------------------------------------------------------------*/
 osThreadId_t tid_ThPulsador;
 
-extern char  buffer_tx_flash[5000];
+extern char  buffer_tx_flash[2800];
+extern int num_palabras_flash;
 /*------------------------------------------------------------------
             Funcion del Thread
  -----------------------------------------------------------------*/
@@ -55,7 +56,7 @@ void ThPulsador (void *argument) {
 		/* ---------------------------------------------------------------------------------
 				Entrada al modo sleep mode cada vez que se pulse el botón de usuario 
 		------------------------------------------------------------------------------------ */
-		enter_sleep_mode(buffer_tx_flash);
+		enter_sleep_mode(buffer_tx_flash,num_palabras_flash);
 		printf("Salida modo bajo consumo\n\r");
 		osThreadYield();
   }

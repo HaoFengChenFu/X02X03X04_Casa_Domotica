@@ -10,6 +10,6 @@
 	
 	 /* Declaración de funciones */
 	 
-	void enter_sleep_mode(char * buffer_tx_flash);
+	void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash);
 	
 #endif

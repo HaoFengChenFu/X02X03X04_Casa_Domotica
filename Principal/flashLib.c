@@ -185,6 +185,10 @@
 	 
 	 int n_words = (strlen(cadena_caracteres)/4)+((strlen(cadena_caracteres)%4)!=0);//determinamos el numero de palabras que hay en la variable (1 palabra son 32 bits)
 	 
+	 if((strlen(cadena_caracteres)%4)!=0){//depuracion
+		 printf("No es exacto");
+	 }
+	 
 	 return n_words;
  }
  

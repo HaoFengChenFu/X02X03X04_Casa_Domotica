@@ -21,14 +21,10 @@ char* dataTemp, dataHum;
 uint8_t numPalabras;
 char* buffer;
 
- char *buffer_rx_flash;
- char  buffer_tx_flash[5000];
+ char  buffer_tx_flash[2800];//guardamos las ultimas 100 medidas (28 caracteres/palabra * 100)
 static char string_escritura_flash[38];
- int numero_palabras_escritura_flash;//numero de palabras que se guardan en una unica escritura de la flash
-static int numero_palabras_totales_flash=0;//numero de palabras totales que hemos guardado en la flash
-
-
-
+int num_palabras_flash=0;//palabras a guardar en la flash
+int cuenta=0;
 /*---------------------------------
   	Cola de mensajes de entrada
  *---------------------------------*/
@@ -176,8 +172,15 @@ void ThPrincipal (void *argument) {
 		------------------------------------------------------------------------------------ */
 		
 		if(nueva_medida_temp_hum == osOK){
-		  sprintf(string_escritura_flash,"%.2d:%.2d:%.2d->T:%.2f|C H:%.2f%%\n",datosFechaHora.horas,datosFechaHora.minutos,datosFechaHora.segundos,datos_SHT30.temperatura,datos_SHT30.humedad);
+			if(buffer_tx_flash[2800-1]!= 0){//array lleno
+				for(int i=0;i<2800-1;i++){//borramos el buffer
+					buffer_tx_flash[i]=0;
+				}
+			}
+		  sprintf(string_escritura_flash,"%.2d:%.2d:%.2d T:%.2f C H:%.2f%%\n",datosFechaHora.horas,datosFechaHora.minutos,datosFechaHora.segundos,datos_SHT30.temperatura,datos_SHT30.humedad);
 		  strcat(buffer_tx_flash,string_escritura_flash);//concatenamos medidas realizadas
+			num_palabras_flash=num_palabras_string(buffer_tx_flash);
+			cuenta++;
 		}
 		
   	osDelay(250);		// Para evitar que se este actualizando todo el rato
