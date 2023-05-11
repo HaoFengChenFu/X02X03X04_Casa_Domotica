@@ -301,7 +301,7 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 		
 		case 'h':				// Humedad Relativa
-					sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+					sprintf(prueba, "%.2f", datos_SHT30.humedad);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
 					num_pag_web = 0;
 			break;
@@ -327,15 +327,15 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					num_pag_web = 2;
       break;
 		
-    case 's':				// Refresco del RTC
+    case 's':				// Refresco
 				switch(num_pag_web){
 					case 0:
-							sprintf(prueba, "%.2f %%", datos_SHT30.humedad);
+							sprintf(prueba, "%.2f", datos_SHT30.humedad);
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 					
 					case 1:
-							sprintf(prueba, "%d %%", datos_luz.porcentaje_pulso);
+							sprintf(prueba, "%d", datos_luz.porcentaje_pulso);
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 					
@@ -347,12 +347,12 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					break;
 					
 					case 3:
-							sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+							sprintf(prueba, "%.2f", datos_SHT30.temperatura);
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 					
 					case 4:
-							sprintf(prueba, "Humedad:  %.2f %%", datos_SHT30.humedad);
+							sprintf(prueba, "Humedad:  %.2f", datos_SHT30.humedad);
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 				}
@@ -360,7 +360,7 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
       break;
 		
     case 't':				// Temperatura
-					sprintf(prueba, "%.2f ºC", datos_SHT30.temperatura);
+					sprintf(prueba, "%.2f", datos_SHT30.temperatura);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
 					num_pag_web = 3;
       break;

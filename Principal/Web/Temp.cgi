@@ -22,7 +22,7 @@ t <form action="Temp.cgi" method="post" name="Temp">
 t <input type="hidden" value="Temp" name="pg">
 t <table border=0 width=99%><font size="3">
 t <tr bgcolor=#FFA420>
-t  <th width=100%>Temperatura</th>
+t  <th width=100%>Temperatura (ºC)</th>
 t <tr>
 # Here begin data setting which is formatted in HTTP_CGI.C module
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""

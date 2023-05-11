@@ -16,13 +16,13 @@ t   clearTimeout(val_elHumedad);
 t }
 t  </script> </head>
 i pg_header.inc
-t <h2 align=center><br>Modulo de Humedad</h2>
+t <h2 align=center><br>Modulo de Humedad (%)</h2>
 t <p><font size="2">Esta página muestra el valor de la <b> humedad relativa </b>.
 t <form action="Humedad.cgi" method="post" name="humedad">
 t <input type="hidden" value="humedad" name="pg">
 t <table border=0 width=99%><font size="3">
 t <tr bgcolor=#00AAE4>
-t  <th width=30%>Humedad</th>
+t  <th width=30%>Humedad (%)</th>
 t <tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
 c h 1 size="60" id="valor_humedad" value="%s"></td>

@@ -65,8 +65,8 @@ void getLocalTime(uint32_t seconds)
   strftime(buf, sizeof(buf), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
 	
 	// Añadido    A lo mejor hay que pasarlo a (uint8_t)		**************************************************************
-	Set_RTC_Time(ts.tm_hour, ts.tm_min, ts.tm_sec);				// Hora + 1 porque el que devuelve está retrasado 1 hora
-	Set_RTC_Date(ts.tm_year-100, ts.tm_mon+1, ts.tm_wday, ts.tm_yday-18);
+	Set_RTC_Time(ts.tm_hour+2, ts.tm_min, ts.tm_sec);	
+	Set_RTC_Date(ts.tm_year-100, ts.tm_mon+1, ts.tm_wday, ts.tm_yday+1);
 	
 }
 
@@ -115,8 +115,10 @@ int Init_timer_SNTP (void)
 void STNP_Thread(void *argument) 
 {
 	Init_timer_SNTP();
+	get_SNTP_Time();
+	
 	while(1){
-		osTimerStart(timer_SNTP, 300000);
+		osTimerStart(timer_SNTP, 5000);
 		osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
 	}
 	
