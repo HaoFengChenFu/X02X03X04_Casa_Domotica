@@ -10,7 +10,9 @@
 void ADC1_pins_F429ZI_config(){
 	  GPIO_InitTypeDef GPIO_InitStruct = {0};
 	__HAL_RCC_ADC1_CLK_ENABLE();
+		__HAL_RCC_ADC3_CLK_ENABLE();
 	__HAL_RCC_GPIOC_CLK_ENABLE();
+		__HAL_RCC_GPIOA_CLK_ENABLE();
 	/*PC0     ------> ADC1_IN10
     PC3     ------> ADC1_IN13
     */
@@ -25,6 +27,10 @@ void ADC1_pins_F429ZI_config(){
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 		
 		
+		GPIO_InitStruct.Pin = GPIO_PIN_3;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   }
 /**

@@ -16,7 +16,7 @@
 	{
 		uint8_t porcentaje_pulso;
 		bool encender_luz;
-		
+		uint8_t sismo;
 	} Mensaje_Iluminacion;
 	
 	void Init_PWM_Iluminacion_Pin(void);

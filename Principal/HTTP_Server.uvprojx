@@ -568,6 +568,16 @@
               <FileType>5</FileType>
               <FilePath>.\modo_sleep.h</FilePath>
             </File>
+            <File>
+              <FileName>Sismo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sismo.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sismo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Sismo.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1268,6 +1278,16 @@
               <FileName>modo_sleep.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\modo_sleep.h</FilePath>
+            </File>
+            <File>
+              <FileName>Sismo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Sismo.c</FilePath>
+            </File>
+            <File>
+              <FileName>Sismo.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Sismo.h</FilePath>
             </File>
           </Files>
         </Group>

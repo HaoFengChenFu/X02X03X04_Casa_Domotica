@@ -10,6 +10,7 @@ osMessageQueueId_t mid_MsgIluminacion;
 static TIM_HandleTypeDef htim4;
 static TIM_OC_InitTypeDef Channel_Tim4_Config;
 Mensaje_Iluminacion infoLuz;
+osTimerId_t sismo_detectado_id;
 
 void ThIluminacion (void *argument);                   // thread function
  
@@ -35,7 +36,14 @@ int Init_ThIluminacion(void) {
 void Init_PWM_Iluminacion_Pin(void)
 {
 	GPIO_InitTypeDef GPIO_InitStruct;
-   __HAL_RCC_GPIOD_CLK_ENABLE();
+	
+	__HAL_RCC_GPIOB_CLK_ENABLE();
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	
+  __HAL_RCC_GPIOD_CLK_ENABLE();
   
   GPIO_InitStruct.Pin = GPIO_PIN_15;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -95,6 +103,27 @@ void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, t
 	}
 }
 
+static void Timer_Sismo_Detectado_Callback(void const *arg)      // Callback creada para el timer virtual
+{
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+}
+
+/*------------------------------------------------------------------
+          Iniciacion del timer virtual para rebotes
+ -----------------------------------------------------------------*/
+int Init_timer_Sismo_detectado (void)
+{
+	uint32_t exec;
+	osStatus_t status;
+  exec = 42U;
+  sismo_detectado_id = osTimerNew((osTimerFunc_t)&Timer_Sismo_Detectado_Callback, osTimerOnce, &exec, NULL);
+  if(sismo_detectado_id != NULL){
+    if( status != osOK){
+      return -1;
+    }
+  }
+  return NULL;
+}
 
 /*------------------------------------------------------------------
 						Iniciacion de la cola de mensajes
@@ -118,6 +147,11 @@ void ThIluminacion (void *argument) {
   while (1) {
     osMessageQueueGet(mid_MsgIluminacion, &infoLuz, 0 , 0);
 		Config_PWM_Pulse(infoLuz.porcentaje_pulso, infoLuz.encender_luz);
+		
+		if(infoLuz.sismo == 1){
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
+			osTimerStart(sismo_detectado_id, 30000);
+		}
 		
     osThreadYield();
   }

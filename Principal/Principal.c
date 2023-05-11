@@ -25,6 +25,7 @@ char* buffer;
 static char string_escritura_flash[38];
 int num_palabras_flash=0;//palabras a guardar en la flash
 int cuenta=0;
+uint8_t sismo;
 /*---------------------------------
   	Cola de mensajes de entrada
  *---------------------------------*/
@@ -33,6 +34,7 @@ extern osMessageQueueId_t mid_MsgRTC;
 extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
 extern osMessageQueueId_t mid_MsgMando;
+extern osMessageQueueId_t mid_MsgSismo;
 
 /*---------------------------------
   	Cola de mensajes de salida
@@ -91,7 +93,7 @@ void Init_All_Threads (void){
 	Init_ThIluminacion();
 	Init_ThMando();
 	Init_ThGaraje();
-
+	Init_ThSismo();
 }
 
 
@@ -103,7 +105,7 @@ void ThPrincipal (void *argument) {
 	uint8_t porcentaje = 0;
 	uint8_t encender_vent_anterior = 0;
 	uint8_t on_off_garaje = 0, on_off_garaje_anterior = 1;
-	
+	uint8_t sismo_anterior = 0;
 	
   while (1) {
 
@@ -116,7 +118,7 @@ void ThPrincipal (void *argument) {
 		osMessageQueueGet(mid_MsgRTC, &datosFechaHora, 0, 0);
 		nueva_medida_temp_hum=osMessageQueueGet(mid_MsgTemp_Hum, &datos_SHT30, 0, 120U);
 		osMessageQueueGet(mid_MsgMando, &on_off_garaje, 0, 0);
-	
+		osMessageQueueGet(mid_MsgSismo, &sismo, 0, 0);
 		
 		//---------------------------------------------------------------------------------------------------------------------------
 		
@@ -127,12 +129,6 @@ void ThPrincipal (void *argument) {
 		/* ---------------------------------------------------------------------
 			 Asignacion de valores para enviar mensajes a los módulos de salida
 		--------------------------------------------------------------------- */
-		if(datos_luz.porcentaje_pulso != porcentaje || datos_luz.encender_luz != encender_luces){
-			datos_luz.porcentaje_pulso = porcentaje;
-			datos_luz.encender_luz = encender_luces;
-			osMessageQueuePut(mid_MsgIluminacion, &datos_luz, 0, osWaitForever);
-		}
-			
 		LCDDatos.temperatura = datos_SHT30.temperatura;
 		LCDDatos.humedad = datos_SHT30.humedad;
 		
@@ -143,6 +139,16 @@ void ThPrincipal (void *argument) {
 		LCDDatos.mes = datos_horarios.mes = datosFechaHora.mes;
 		LCDDatos.dia = datos_horarios.dia = datosFechaHora.dia;
 		
+		
+		if(datos_luz.porcentaje_pulso != porcentaje || datos_luz.encender_luz != encender_luces || sismo != sismo_anterior){
+			datos_luz.sismo = sismo;
+			datos_luz.porcentaje_pulso = porcentaje;
+			datos_luz.encender_luz = encender_luces;
+			osMessageQueuePut(mid_MsgIluminacion, &datos_luz, 0, osWaitForever);
+		}
+		
+		sismo_anterior = sismo;
+
 		
 		if(vent_mode == 0){
 			encender_vent = (umbralTemp < datos_SHT30.temperatura) ? 1 : 0;
