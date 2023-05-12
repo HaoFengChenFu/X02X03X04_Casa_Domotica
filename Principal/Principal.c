@@ -15,7 +15,8 @@ Mensaje_Iluminacion datos_luz;
 // Cambiarlo a variable statica
 uint8_t encender_vent = 0;
 uint8_t vent_forzado, luz_forzada, vent_mode;
-
+float consumo_rcv = 0;
+	
  osStatus_t nueva_medida_temp_hum;
 char* dataTemp, dataHum;
 uint8_t numPalabras;
@@ -35,6 +36,7 @@ extern osMessageQueueId_t mid_MsgLDR;
 extern osMessageQueueId_t mid_MsgTemp_Hum;
 extern osMessageQueueId_t mid_MsgMando;
 extern osMessageQueueId_t mid_MsgSismo;
+extern osMessageQueueId_t mid_MsgConsumo;
 
 /*---------------------------------
   	Cola de mensajes de salida
@@ -97,6 +99,7 @@ void Init_All_Threads (void){
 	Init_ThMando();
 	Init_ThGaraje();
 	Init_ThSismo();
+	Init_ThConsumo();
 }
 
 
@@ -109,7 +112,6 @@ void ThPrincipal (void *argument) {
 	uint8_t encender_vent_anterior = 0;
 	uint8_t on_off_garaje = 0, on_off_garaje_anterior = 1;
 	uint8_t sismo_anterior = 0;
-	
   while (1) {
 
 		/* ---------------------------------------------------------------------
@@ -126,7 +128,7 @@ void ThPrincipal (void *argument) {
 		//---------------------------------------------------------------------------------------------------------------------------
 		
 		// Aqui debe obtener el consumo
-		
+		osMessageQueueGet(mid_MsgConsumo, &consumo_rcv, 0, 0);
 		//---------------------------------------------------------------------------------------------------------------------------
 		
 		/* ---------------------------------------------------------------------

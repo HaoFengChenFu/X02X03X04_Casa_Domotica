@@ -22,7 +22,7 @@ t <form action="Consumo.cgi" method="post" name="Consumo">
 t <input type="hidden" value="Consumo" name="pg">
 t <table border=0 width=99%><font size="3">
 t <tr bgcolor=#FFA420>
-t  <th width=100%>Consumo</th>
+t  <th width=100%>Consumo (A)</th>
 t <tr>
 # Here begin data setting which is formatted in HTTP_CGI.C module
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""

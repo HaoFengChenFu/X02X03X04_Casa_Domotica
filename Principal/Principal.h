@@ -20,6 +20,7 @@
 	
 	#include "pulsador.h"
 	#include "Sismo.h"
+	#include "Consumo.h"
 	
 	typedef struct{
 		uint8_t horas;

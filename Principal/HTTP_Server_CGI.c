@@ -12,11 +12,13 @@
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 #include "rl_net.h"                     // Keil.MDK-Pro::Network:CORE
 #include "stdlib.h"				// Para usar el atoi
-
+#include "adc.h"
 #include "Principal.h"
 
 char Time_Date[60], prueba[30];
 uint8_t umbralTemp = 25;
+
+ float value=0;
 /*
 	num_pag_web es importante, por alguna razón el cgx debe apuntar solamente a uno de los cases. Por eso, cuando entramos en una pagina 
 	se va a indicar donde está y el refresco funcionará en función de la página
@@ -28,6 +30,8 @@ extern Tiempo_Fecha datos_horarios;
 extern Mensaje_Iluminacion datos_luz;
 
 extern uint8_t vent_forzado, luz_forzada, vent_mode;
+extern float consumo_rcv;
+
 
 static uint8_t umbralTemp_anterior;
 
@@ -179,6 +183,7 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
 
 // Generate dynamic web data from a script line.
 uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *pcgi) {
+	ADC_HandleTypeDef adc;
   int32_t socket;
   netTCP_State state;
   NET_ADDR r_client;
@@ -307,7 +312,8 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 			break;
 		
 		case 'i':				// Consumo
-					sprintf(prueba, "Ahora solo representa la humedad %.2f %%", datos_SHT30.humedad);
+
+					sprintf(prueba, "%.4f", consumo_rcv);
           len = (uint32_t)sprintf (buf, &env[4], prueba);
 					num_pag_web = 4;
 			break;
@@ -352,7 +358,8 @@ uint32_t netCGI_Script (const char *env, char *buf, uint32_t buflen, uint32_t *p
 					break;
 					
 					case 4:
-							sprintf(prueba, "Humedad:  %.2f", datos_SHT30.humedad);
+						// Caso del consumo
+							sprintf(prueba, "%.4f", consumo_rcv);
 							len = (uint32_t)sprintf (buf, &env[1], prueba);
 					break;
 				}

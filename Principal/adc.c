@@ -31,6 +31,8 @@ void ADC1_pins_F429ZI_config(){
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+		
+		
 
   }
 /**

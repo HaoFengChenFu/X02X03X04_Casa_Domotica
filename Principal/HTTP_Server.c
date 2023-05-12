@@ -22,7 +22,7 @@
 
 
 #include "lcd.h"
-
+#include "adc.h"
 
 
 // Main stack size must be multiple of 8 Bytes
@@ -36,7 +36,7 @@ const osThreadAttr_t app_main_attr = {
 //extern GLCD_FONT GLCD_Font_6x8;
 //extern GLCD_FONT GLCD_Font_16x24;
 
-extern uint16_t AD_in          (uint32_t ch);
+uint16_t AD_in          (uint32_t ch);
 extern uint8_t  get_button     (void);
 extern void     netDHCP_Notify (uint32_t if_num, uint8_t option, const uint8_t *val, uint32_t len);
 
@@ -62,17 +62,10 @@ __NO_RETURN void app_main (void *arg);
 
 /* Read analog inputs */
 uint16_t AD_in (uint32_t ch) {
-  int32_t val = 0;
-
-//	ADC_HandleTypeDef adchandle; //handler definition
-//	ADC1_pins_F429ZI_config(); //specific PINS configuration
-
-//	ADC_Init_Single_Conversion(&adchandle , ADC1); //ADC1 configuration
-//    
-//	val=ADC_getRawValue(&adchandle , ch ); //get values from channel 10->ADC123_IN10
-//	//value=ADC_getVoltage(&adchandle , 13 );
-//	
-  return ((uint16_t)val);
+  ADC_HandleTypeDef adc;
+  float value=ADC_getVoltage(&adc , ch);
+	
+  return ((uint16_t)value);
 }
 
 /* Read digital inputs */
