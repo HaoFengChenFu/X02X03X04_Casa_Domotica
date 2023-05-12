@@ -85,6 +85,8 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
 	
   /* Suspend Tick increment to prevent wakeup by Systick interrupt. 
      Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base) */
+  //HAL_NVIC_GetPendingIRQ (EXTI15_10_IRQn);
+	//HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
   HAL_SuspendTick();
 
   /* Request to enter SLEEP mode */
