@@ -78,7 +78,6 @@ void Init_All_Pins(void){
 	Init_Mando_Pin();
 	Init_PWM_Iluminacion_Pin();
 	Init_PWM_Garaje();
-	init_servo();
 	init_ventilador();
 	Init_I2C_Temp_Hum();
 }

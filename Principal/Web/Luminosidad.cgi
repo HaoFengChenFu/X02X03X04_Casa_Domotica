@@ -24,7 +24,7 @@ t <br>
 t </form>
 t <table border=0 width=99%><font size="3">
 t <tr bgcolor=#FFF52D>
-t  <th width=30%>Luminosidad</th>
+t  <th width=30%>Luminosidad (%)</th>
 t <tr>
 t <td align="center"><input type="text" readonly style="background-color: transparent; border: 0px text-align:"center""
 c l 1 size="60" id="valor_lum" value="%s "></td>

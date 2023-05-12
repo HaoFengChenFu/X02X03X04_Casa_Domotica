@@ -86,14 +86,14 @@ void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, t
 		
 		Channel_Tim4_Config.OCMode = TIM_OCMODE_PWM1;	// TIM_OCMODE_PWM2 para RGB / TIM_OCMODE_PWM1 para los Leds de la placa
 		
-		if (pulse < 87){//mucha luminosidad
+		if (pulse < 70){//mucha luminosidad
 		Channel_Tim4_Config.Pulse = 0;		
 		}
-		else if(pulse >= 87 && pulse < 95){//rango 1
+		else if(pulse >= 70 && pulse < 85){//rango 1
 		Channel_Tim4_Config.Pulse = 80*50;				
-		}else if(pulse >= 95 && pulse <= 97){//rango 2
+		}else if(pulse >= 85 && pulse <= 95){//rango 2
 		Channel_Tim4_Config.Pulse = 80*60;				
-		}else if(pulse >= 97 && pulse <= 99){//rango 3
+		}else if(pulse >= 95 && pulse <= 99){//rango 3
 		Channel_Tim4_Config.Pulse = 80*70;				
 		}else if(pulse >= 99 && pulse <= 100){//rango 4
 		Channel_Tim4_Config.Pulse = 80*80;		
