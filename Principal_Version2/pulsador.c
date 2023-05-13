@@ -56,8 +56,8 @@ void ThPulsador (void *argument) {
 		/* ---------------------------------------------------------------------------------
 				Entrada al modo sleep mode cada vez que se pulse el botón de usuario 
 		------------------------------------------------------------------------------------ */
-		enter_sleep_mode(buffer_tx_flash,num_palabras_flash);
-		printf("Salida modo bajo consumo\n\r");
+		//enter_sleep_mode(buffer_tx_flash,num_palabras_flash);
+		//printf("Salida modo bajo consumo\n\r");
 		osThreadYield();
   }
 }

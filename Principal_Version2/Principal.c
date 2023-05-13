@@ -94,7 +94,7 @@ void Init_All_Threads (void){
 	Init_ThTemp_Hum();
 	Init_ThPIR();
 	Init_ThLDR();
-  Init_ThPulsador();
+  //Init_ThPulsador();
 	Init_ThIluminacion();
 	Init_ThMando();
 	Init_ThGaraje();

@@ -33,6 +33,8 @@ extern Mensaje_Iluminacion datos_luz;
 extern uint8_t vent_forzado, vent_mode;
 extern float consumo_rcv;
 
+extern char  buffer_tx_flash[2800];
+extern int num_palabras_flash;
 
 static uint8_t umbralTemp_anterior;
 
@@ -142,18 +144,11 @@ void netCGI_ProcessData (uint8_t code, const char *data, uint32_t len) {
     data = netCGI_GetEnvVar (data, var, sizeof (var));
     if (var[0] != 0) {
 
-			if (strcmp (var, "ModoVaca=1") == 0){
-				
-				//********************************************* AQUI ENTRA AL MODO VACACIONES *********************************************
+			if (strcmp (var, "ModoVaca=1") == 0){//modo vacaciones 
 				
 					printf("\nEntrando al modo de bajo consumo\n");
-				
-				
-				
-				
-				
-				
-				
+				  enter_sleep_mode(buffer_tx_flash,num_palabras_flash);
+				  printf("\nSalida modo bajo consumo\n");	
 			}
       else if (strcmp (var, "VentHab=1") == 0) {
         // Encender el ventilador
