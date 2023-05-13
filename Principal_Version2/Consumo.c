@@ -80,7 +80,7 @@ void Consumo_Thread(void *argument)
 	ADC_Init_Single_Conversion(&adchandle , ADC1);		// Cambiar al ADC2 o al ADC3 para que no esten usando el mismo ADC
 	Init_timer_Consumo();
 	while(1){
-		printf("CONSUMO\n\n\n\n\n\n");
+		printf("CONSUMO\n");
 		registro_consumo = 0;
 		corriente = 0;
 		for(int i = 0; i < 50; i++){

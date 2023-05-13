@@ -11,5 +11,5 @@
 	 /* Declaración de funciones */
 	 
 	void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash);
-	
+	void ETH_PhyExitFromPowerDownMode(void);
 #endif

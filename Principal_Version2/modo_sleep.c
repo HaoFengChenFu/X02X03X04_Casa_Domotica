@@ -2,6 +2,9 @@
 #include "flashLib.h"
 #include "pulsador.h"
 #include "principal.h"
+#include "rl_net.h"                     
+#include "stm32f4xx_hal.h"  
+
 
 
 /**
@@ -32,7 +35,7 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
 ////  __HAL_RCC_USB_OTG_FS_CLK_DISABLE();
 
 //  /* Disable Ethernet Clock */
-//  //__HAL_RCC_ETH_CLK_DISABLE();
+   __HAL_RCC_ETH_CLK_DISABLE();
 
   /* Configure all GPIO as analog to reduce current consumption on non used IOs */
   /* Enable GPIOs clock */
@@ -78,30 +81,68 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
 //  __HAL_RCC_GPIOK_CLK_DISABLE();
 
   /* Configuracion del boton de usuario en modo interrupcion */
-  
-	 Init_Pin_Pulsador();
 	 
 	 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_7);
 	
   /* Suspend Tick increment to prevent wakeup by Systick interrupt. 
      Otherwise the Systick interrupt will wake up the device within 1ms (HAL time base) */
-  //HAL_NVIC_GetPendingIRQ (EXTI15_10_IRQn);
-	//HAL_NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
+  
   HAL_SuspendTick();
 
   /* Request to enter SLEEP mode */
   HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+	
+//	__HAL_RCC_GPIOA_CLK_ENABLE();
+//  //__HAL_RCC_GPIOB_CLK_ENABLE();
+//  //__HAL_RCC_GPIOC_CLK_ENABLE();
+//  //__HAL_RCC_GPIOD_CLK_ENABLE();
+//  //__HAL_RCC_GPIOE_CLK_ENABLE();
+//  __HAL_RCC_GPIOF_CLK_ENABLE();
+//  __HAL_RCC_GPIOG_CLK_ENABLE();
+//  __HAL_RCC_GPIOH_CLK_ENABLE();
+//  __HAL_RCC_GPIOI_CLK_ENABLE();
+//  __HAL_RCC_GPIOJ_CLK_ENABLE();
+//  __HAL_RCC_GPIOK_CLK_ENABLE();
 
   /* Resume Tick interrupt if disabled prior to sleep mode entry */
   HAL_ResumeTick();
 	
 	HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_7);
 	
-	Init_All_Pins();
-  /* Exit Ethernet Phy from LowPower mode */
- // ETH_PhyExitFromPowerDownMode();
- 
- /* enable Ethernet Clock */
-  //__HAL_RCC_ETH_CLK_ENABLE();	
+	//Init_All_Pins();
+  /* inicializacion ETHERNET */
+  ETH_PhyExitFromPowerDownMode();
+	//osDelay(3000);
 	
+}
+
+void ETH_PhyExitFromPowerDownMode(void)
+{
+  // ETH_HandleTypeDef heth;
+   GPIO_InitTypeDef GPIO_InitStruct;
+   uint32_t phyregval = 0;
+   
+  /* ETH CLKs and GPIOs initialization ******************************/
+  /* To be removed when the function is called from HAL_ETH_MspInit() when 
+     exiting from Standby mode */
+	
+	/* Enable GPIO clocks*/
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  
+  /* Configure PA2 */
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL; 
+  GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+  GPIO_InitStruct.Pin = GPIO_PIN_1 | GPIO_PIN_2;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  
+  /* Configure PC1*/
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  
+  /* Enable ETH CLK */
+  __HAL_RCC_ETH_CLK_ENABLE();
+
 }
