@@ -46,6 +46,24 @@ void Init_PIR_Pin(void)
 	HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
+/*------------------------------------------------------------------------
+             Desactivacion interrupcion del PIR
+ ------------------------------------------------------------------------*/	
+void desactivacion_PIR(void)
+{
+	GPIO_InitTypeDef GPIO_InitStruct;
+	
+	__HAL_RCC_GPIOE_CLK_ENABLE();
+
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;			// Configuro para que detecte ambas
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+
+	GPIO_InitStruct.Pin = GPIO_PIN_11;				// Para el sensor PIR se ha usado el Pin PE11
+	HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+}
+
 
 /*------------------------------------------------------------------
           Callback del timer virtual para los rebotes

@@ -80,7 +80,8 @@ void enter_sleep_mode(char * buffer_tx_flash, int num_palabras_flash){
 //  __HAL_RCC_GPIOJ_CLK_DISABLE();
 //  __HAL_RCC_GPIOK_CLK_DISABLE();
 
-  /* Configuracion del boton de usuario en modo interrupcion */
+  /* desactivamos la interrupcion del PIR */
+	 desactivacion_PIR();
 	 
 	 HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_7);
 	

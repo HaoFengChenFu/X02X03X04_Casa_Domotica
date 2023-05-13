@@ -8,6 +8,7 @@
 	
 	int Init_ThPIR(void);
 	void Init_PIR_Pin(void);
+	void desactivacion_PIR(void);
 	
 	int Init_MsgPIR (void);
 	int Init_timer_PIR (void);
