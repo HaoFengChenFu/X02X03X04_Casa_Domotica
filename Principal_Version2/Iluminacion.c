@@ -48,6 +48,8 @@ void Init_PWM_Iluminacion_Pin(void)
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	GPIO_InitStruct.Pin = GPIO_PIN_14;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	GPIO_InitStruct.Pin = GPIO_PIN_1;
+	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
   __HAL_RCC_GPIOD_CLK_ENABLE();
   
@@ -111,7 +113,7 @@ void Config_PWM_Pulse(uint8_t pulse, bool PWM_Habilitado)			// PWM_Habilitado, t
 
 static void Timer_Sismo_Detectado_Callback(void const *arg)      // Callback creada para el timer virtual
 {
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
 }
 
 /*------------------------------------------------------------------
@@ -149,14 +151,15 @@ int Init_MsgIluminacion (void)
 
 void ThIluminacion (void *argument) {
 	Init_MsgIluminacion();
-
+	Init_timer_Sismo_detectado();
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_SET);
   while (1) {
     osMessageQueueGet(mid_MsgIluminacion, &infoLuz, 0 , 0);
 		Config_PWM_Pulse(infoLuz.porcentaje_pulso, infoLuz.encender_luz);
 		
 		if(infoLuz.sismo == 1){
-			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, GPIO_PIN_SET);
-			osTimerStart(sismo_detectado_id, 30000);
+			HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1, GPIO_PIN_RESET);
+			osTimerStart(sismo_detectado_id, 10000);
 		}
 		
     osThreadYield();
