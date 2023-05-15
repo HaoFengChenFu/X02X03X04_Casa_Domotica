@@ -7,5 +7,5 @@
 
 	int Init_ThLDR (void);
 	int Init_MsgLDR (void);
-	
+	int Init_timer_LDR (void);
 #endif

@@ -89,8 +89,7 @@ void Consumo_Thread(void *argument)
 			osTimerStart(timer_Consumo, 2);
 			osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);
 		}
-		consumo = (corriente*1000)/50 ;
-		consumo =  consumo+(consumo/10);
+		consumo = (corriente*1000)/50 - 0.1;
 		osMessageQueuePut(mid_MsgConsumo, &consumo, 0 , 0);
 		osTimerStart(timer_Consumo, 250);
 		osThreadFlagsWait(1, osFlagsWaitAny, osWaitForever);

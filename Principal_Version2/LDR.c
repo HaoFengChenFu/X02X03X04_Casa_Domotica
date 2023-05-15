@@ -7,6 +7,8 @@ static ADC_HandleTypeDef adc;
 osThreadId_t tid_ThLDR;    
 osMessageQueueId_t mid_MsgLDR;
 
+osTimerId_t timer_LDR_id;
+
 void ThLDR (void *argument);                   // thread function
 
 /*------------------------------------------------------------------------------
@@ -22,6 +24,28 @@ int Init_ThLDR (void) {
 	ADC1_pins_F429ZI_config();
 	
   return(0);
+}
+
+static void Timer_LDR_Callback(void const *arg)      // Callback creada para el timer virtual
+{
+	osThreadFlagsSet(tid_ThLDR, 0x1);
+}
+
+/*------------------------------------------------------------------
+          Iniciacion del timer virtual para rebotes
+ -----------------------------------------------------------------*/
+int Init_timer_LDR (void)
+{
+	uint32_t exec;
+	osStatus_t status;
+  exec = 57U;
+  timer_LDR_id = osTimerNew((osTimerFunc_t)&Timer_LDR_Callback, osTimerOnce, &exec, NULL);
+  if(timer_LDR_id != NULL){
+    if( status != osOK){
+      return -1;
+    }
+  }
+  return NULL;
 }
 
 /*------------------------------------------------------------------
@@ -44,6 +68,7 @@ int Init_MsgLDR (void)
  -------------------------------------------------------------------------------*/
 void ThLDR (void *argument){
 	Init_MsgLDR();
+	Init_timer_LDR();
 	uint8_t porcentaje_anterior = 0;
 	ADC_Init_Single_Conversion(&adc,ADC1);
 	while(1){
@@ -54,7 +79,7 @@ void ThLDR (void *argument){
 		}
 		
 		porcentaje_anterior = porcentaje_pulso;
-
-		osThreadYield();                            // suspend thread
+		osTimerStart(timer_LDR_id, 250);
+		osThreadFlagsWait(0x1, osFlagsWaitAny, osWaitForever);
 	}
 }
