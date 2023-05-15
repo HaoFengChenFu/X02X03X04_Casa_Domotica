@@ -185,6 +185,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>nueva_medida_temp_hum,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>voltaje_sismo</ItemText>
+        </Ww>
       </WatchWindow1>
       <MemoryWindow1>
         <Mm>

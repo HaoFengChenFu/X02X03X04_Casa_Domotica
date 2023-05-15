@@ -2,8 +2,8 @@
 
 static ADC_HandleTypeDef adc;
 
-	float voltaje;		//********************************************************* POR QUITAR
-	uint8_t porcentaje_pulso;
+static float voltaje;
+static uint8_t porcentaje_pulso;
 osThreadId_t tid_ThLDR;    
 osMessageQueueId_t mid_MsgLDR;
 

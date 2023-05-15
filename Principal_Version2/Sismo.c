@@ -2,8 +2,8 @@
 
 static ADC_HandleTypeDef adc;
 
-	float voltaje_sismo;
-	uint8_t sismo_detectado = 0;
+static float voltaje_sismo;
+static uint8_t sismo_detectado = 0;
 osThreadId_t tid_ThSismo;   
 
 osMessageQueueId_t mid_MsgSismo;
@@ -29,9 +29,10 @@ int Init_ThSismo (void) {
 static void Timer_Sismo_Callback(void const *arg)      // Callback creada para el timer virtual
 {
 	voltaje_sismo = ADC_getVoltage(&adc, 3);		// PA3
-	if(voltaje_sismo >= 0.5){
+	if(voltaje_sismo > 1.5){
 		sismo_detectado = 1;
 		osMessageQueuePut(mid_MsgSismo, &sismo_detectado, 0 , 0);
+		}else{
 		sismo_detectado = 0;
 		osMessageQueuePut(mid_MsgSismo, &sismo_detectado, 0 , 0);
 	}

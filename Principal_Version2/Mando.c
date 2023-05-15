@@ -7,7 +7,7 @@ osThreadId_t tid_ThMando;
  -----------------------------------------------------------------*/
 osTimerId_t rebotes_id;  
 osMessageQueueId_t mid_MsgMando;
-uint8_t on_off = 0;
+static uint8_t on_off = 0;
 
 
 void ThMando (void *argument);

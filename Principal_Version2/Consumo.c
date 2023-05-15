@@ -7,7 +7,7 @@ osThreadId_t tid_ThConsumo;
 
 osMessageQueueId_t mid_MsgConsumo;
 static float registro_consumo=0;
-float consumo=0;
+static float consumo=0;
 static osTimerId_t timer_Consumo;
 
 /*-----------------------------

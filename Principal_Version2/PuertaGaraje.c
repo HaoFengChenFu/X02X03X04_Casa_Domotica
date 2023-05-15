@@ -5,10 +5,10 @@
  *      Hilo donde se gestiona el control del ventilador en funcion de 
  *      la temperatura del ambiente.
  *---------------------------------------------------------------------------*/
-uint8_t on_off_garaje=NULL;
+static uint8_t on_off_garaje=NULL;
 uint8_t hal;
 static bool time_out=false;
-uint16_t pulso = 2000;
+static uint16_t pulso = 2000;
 osThreadId_t tid_ThGaraje;                        // thread id
 osMessageQueueId_t mid_MsgGaraje;
 

@@ -136,7 +136,7 @@ void ThPrincipal (void *argument) {
 	uint8_t sismo_anterior = 0;
 	
 	Init_timer_Principal();
-	
+	datos_luz.sismo = 0;
   while (1) {
 
 		/* ---------------------------------------------------------------------

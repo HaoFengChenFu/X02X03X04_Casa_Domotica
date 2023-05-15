@@ -6,7 +6,7 @@
  *      la temperatura del ambiente.
  *---------------------------------------------------------------------------*/
  
- volatile static bool servo_sentido_horario=false;//servo moviendose hacia la izquierda
+volatile static bool servo_sentido_horario=false;//servo moviendose hacia la izquierda
  
 osThreadId_t tid_ThTermostato;                        // thread id
 
@@ -39,11 +39,10 @@ void ThTermostato (void *argument) {
 		osMessageQueueGet(mid_Msg_Ventilador, &encender, 0, osWaitForever);
 		  if(encender==1){//comprobamos umbral
 		    encender_ventilador();
-				// -------------------------------------------------------------- POR DESCOMENTAR -------------------------------------------------------------
-				//move_servo();
+
 		  }else {
 			  apagar_ventilador();
-				//stop_servo();	
+
 		  }
   osThreadYield();                            // suspend thread
   }
