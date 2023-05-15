@@ -31,7 +31,6 @@ t <td align="center"><input type="text" readonly style="background-color: transp
 c r 1 size="27" id="rtc_time_value" value="%s"></td></tr>
 t </font></table>
 t <p align=center>
-t <input type=button value="Refresh" onclick="updateMultiple(rtcUpdate,updateValueRTC)">
 t <input type="checkbox" id="adChkBox" onclick="periodicUpdateRTC()"> Actualización periódica
 t </p></form>
 i pg_footer.inc

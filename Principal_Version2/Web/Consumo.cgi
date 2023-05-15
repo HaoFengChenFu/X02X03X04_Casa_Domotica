@@ -29,7 +29,6 @@ t <td align="center"><input type="text" readonly style="background-color: transp
 c i 1 size="27" id="Consumo_value" value="%s"></td></tr>
 t </font></table>
 t <p align=center>
-t <input type=button value="Refresh" onclick="updateMultiple(ConsumoUpdate,updateValueConsumo)">
 t <input type="checkbox" id="adChkBox" onclick="periodicUpdateConsumo()"> Actualización periódica
 t </p></form>
 i pg_footer.inc

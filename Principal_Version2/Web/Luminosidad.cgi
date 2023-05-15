@@ -30,7 +30,6 @@ t <td align="center"><input type="text" readonly style="background-color: transp
 c l 1 size="60" id="valor_lum" value="%s "></td>
 t </font></table>
 t <p align=center>
-t <input type=button value="Actualizar Luminosidad" onclick="updateMultiple(updateLux,updateValueLux)">
 t <input type="checkbox" id="adChkBox" onclick="periodicUpdateLux()"> Actualización periódica
 t </p></form>
 i pg_footer.inc
