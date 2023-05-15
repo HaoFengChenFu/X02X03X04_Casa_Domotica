@@ -206,6 +206,7 @@ static void Callback_TimerServo (void *argument) {
 	
 	if(on_off_garaje==0 && time_out==false){
 		pulso++; //servo_bajando
+		osTimerStop(id_time_out);
 	}else if(on_off_garaje==1 && time_out==false){
 		pulso--; //servo subiendo
 	}else if(on_off_garaje==0 && time_out==true){
@@ -214,7 +215,7 @@ static void Callback_TimerServo (void *argument) {
 	  pulso++ ;
 	}
 
-	
+	//osTimerStop(id_time_out);
 	if(pulso==2000 || pulso == 1500){
 
 		para_garaje();
@@ -222,6 +223,7 @@ static void Callback_TimerServo (void *argument) {
 			osTimerStart(id_time_out,5000);
 	
 	}
+	
 	
 	
 	Config_PWM_Pulse_Garaje(pulso);
